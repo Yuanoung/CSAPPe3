@@ -182,10 +182,23 @@ int addOK(int x, int y)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 12
  *   Rating: 2
+ * 
+ * 题目求的是，所有偶数位上都为1时，返回1,否则返回0.
+ * 
+ * x &= x >> 16;
+ * x &= x >> 8;
+ * 
+ * 如果在偶数位上有一个为0,那么都会反应到最低字节上。
  */
-int allEvenBits(int x) {
-  return 2;
+int allEvenBits(int x)
+{
+    int mask = 0x55;  // 0101 0101
+
+    x &= x >> 16;     
+    x &= x >> 8;
+    return !(x & mask ^ mask);
 }
+
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
  *   where bits are numbered from 0 (least significant) to 31 (most significant)
