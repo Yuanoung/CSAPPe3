@@ -215,6 +215,7 @@ int allOddBits(int x)
   x &= x >> 8;
   return !(x & mask ^ mask);
 }
+
 /* 
  * anyEvenBit - return 1 if any even-numbered bit in word set to 1
  *   where bits are numbered from 0 (least significant) to 31 (most significant)
@@ -224,8 +225,13 @@ int allOddBits(int x)
  *   Rating: 2
  */
 int anyEvenBit(int x) {
-  return 2;
+  int mask = 0x55;  // 0101 0101
+
+  x |= x >> 16;     
+  x |= x >> 8;
+  return !!(x & mask);
 }
+
 /* 
  * anyOddBit - return 1 if any odd-numbered bit in word set to 1
  *   where bits are numbered from 0 (least significant) to 31 (most significant)
