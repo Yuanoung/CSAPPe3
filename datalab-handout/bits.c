@@ -278,16 +278,60 @@ int bitAnd(int x, int y)
 {
   return ~(~x | ~y);
 }
+
 /*
  * bitCount - returns count of number of 1's in word
  *   Examples: bitCount(5) = 2, bitCount(7) = 3
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 40
  *   Rating: 4
+ * 
+ * 分治法：
+ * 如果我们可以知道前16位，以及后16位分别包含1的位数，那么最后的结果为2者相加。
+ * 一直分解到，前后各一位
+ * AB      R
+ * 00      00
+ * 01      01
+ * 10      01
+ * 11      10
+ * 通过观察我们可以发现A+B=R，而且AB所在的位正好可以表示R。也就是说
+ * R = （A>>1) + B
+ * 
+ * 前后各2位，也是同样的思路，只不过要在 前后各一位 的基础上。
+ * 这样一直计算到前后各16位，最终的结果就是我们想要的
+ * 
+ * bitCount(0x57168ace):
+ * mask                         x
+ *              0101 0111 0001 0110 1000 1010 1100 1110  (0x57168ace) 
+ * 0x55555555   0101 0110 0001 0101 0100 0101 1000 1001          
+ * 0x33333333   0010 0011 0001 0010 0001 0010 0010 0011
+ * 0x0F0F0F0F   0000 0101 0000 0011 0000 0011 0000 0101
+ * 0x00FF00FF   0000 0000 0000 1000 0000 0000 0000 1000 
+ * 0x0000FFFF   0000 0000 0000 0000 0000 0000 0001 0000
  */
-int bitCount(int x) {
-  return 2;
+int bitCount(int x)
+{
+    int mask = 0x55 | (0x55 << 8);  // mask=0x55555555
+    mask |= mask << 16;
+    x = (x & mask) + ((x >> 1) & mask);
+
+    mask = 0x33 | (0x33 << 8);      // mask=0x33333333
+    mask |= mask << 16;
+    x = (x & mask) + ((x >> 2) & mask);
+
+    mask = 0x0F | (0x0F << 8);      // mask=0x0F0F0F0F
+    mask |= mask << 16;
+    x = (x & mask) + ((x >> 4) & mask);
+
+    mask = 0xFF | (0xFF << 16);     // mask=0x00FF00FF
+    x = (x & mask) + ((x >> 8) & mask);
+
+    mask = 0xFF | (0xFF << 8);      // mask=0x0000FFFF
+    x = (x & mask) + ((x >> 16) & mask);
+
+    return x;
 }
+
 /* 
  * bitMask - Generate a mask consisting of all 1's 
  *   lowbit and highbit
