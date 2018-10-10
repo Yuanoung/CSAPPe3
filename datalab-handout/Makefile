@@ -4,7 +4,7 @@
 CC = gcc
 
 # CFLAGS = -O -Wall -m32
-CFLAGS = -O -Wall
+CFLAGS = -O
 LIBS = -lm
 
 all: btest fshow ishow
