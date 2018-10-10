@@ -132,8 +132,8 @@ NOTES:
  *      the correct answers.
  */
 
-
 #endif
+
 /* 
  * absVal - absolute value of x
  *   Example: absVal(-1) = 1.
@@ -141,10 +141,19 @@ NOTES:
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 10
  *   Rating: 4
+ * 
+ * if x < 0, should return ~x + 1 = ((0xFFFFFFFF + 0) ^ x) + 1
+ * else return x                  = ((0xFFFFFFFF + 1) ^ x) + 0
+ * 
+ * ps: ~x = 0xFFFFFFFF ^ x
  */
-int absVal(int x) {
-  return 2;
+int absVal(int x)
+{
+    int mask = ~1 + 1;                  // 0xFFFFFFFF
+    int neg = (x >> 31) & 0x1;          // x is negative？
+    return ((mask + !neg) ^ x) + neg;
 }
+
 /* 
  * addOK - Determine if can compute x+y without overflow
  *   Example: addOK(0x80000000,0x80000000) = 0,
