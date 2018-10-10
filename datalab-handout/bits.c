@@ -241,7 +241,11 @@ int anyEvenBit(int x) {
  *   Rating: 2
  */
 int anyOddBit(int x) {
-    return 2;
+  int mask = 0xAA;  // 1010 1010
+
+  x |= x >> 16;     
+  x |= x >> 8;
+  return !!(x & mask);
 }
 /* 
  * bang - Compute !x without using !
