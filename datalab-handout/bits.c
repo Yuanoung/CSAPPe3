@@ -274,8 +274,9 @@ int bang(int x)
  *   Max ops: 8
  *   Rating: 1
  */
-int bitAnd(int x, int y) {
-  return 2;
+int bitAnd(int x, int y) 
+{
+  return ~(~x | ~y);
 }
 /*
  * bitCount - returns count of number of 1's in word
