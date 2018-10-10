@@ -161,18 +161,20 @@ int absVal(int x)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3
+ * 
+ * sum = x + y
+ * 当x，y符号相同，sum与x（或者y）符号不同是，发生溢出
  */
-int addOK(int x, int y) {
+int addOK(int x, int y)
+{
+    int sum = x + y;
 
+    int neg_overflow = ((x & y & ~sum) >> 31) & 0x1;    // 是否负溢出
+    int pos_overflow = ((~x & ~y & sum) >> 31) & 0x1;   // 是否正溢出
 
-
-
-
-
-
-  return 2;
-
+    return !(neg_overflow | pos_overflow);
 }
+
 /* 
  * allEvenBits - return 1 if all even-numbered bits in word set to 1
  *   where bits are numbered from 0 (least significant) to 31 (most significant)
