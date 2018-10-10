@@ -247,6 +247,7 @@ int anyOddBit(int x) {
   x |= x >> 8;
   return !!(x & mask);
 }
+
 /* 
  * bang - Compute !x without using !
  *   Examples: bang(3) = 0, bang(0) = 1
@@ -254,9 +255,18 @@ int anyOddBit(int x) {
  *   Max ops: 12
  *   Rating: 4 
  */
-int bang(int x) {
-  return 2;
+int bang(int x)
+{
+    // 经过以下移位e,如果x有某一位为1,那么x的最低有效位为1,否则为0
+    x |= x >> 16;
+    x |= x >> 8;
+    x |= x >> 4;
+    x |= x >> 2;
+    x |= x >> 1;
+
+    return 0x1 & x ^ 0x1;
 }
+
 /* 
  * bitAnd - x&y using only ~ and | 
  *   Example: bitAnd(6, 5) = 4
