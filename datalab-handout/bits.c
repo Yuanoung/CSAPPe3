@@ -207,8 +207,13 @@ int allEvenBits(int x)
  *   Max ops: 12
  *   Rating: 2
  */
-int allOddBits(int x) {
-  return 2;
+int allOddBits(int x) 
+{
+  int mask = 0xAA;  // 1010 1010
+
+  x &= x >> 16;     
+  x &= x >> 8;
+  return !(x & mask ^ mask);
 }
 /* 
  * anyEvenBit - return 1 if any even-numbered bit in word set to 1
