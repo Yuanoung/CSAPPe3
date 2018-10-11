@@ -1035,9 +1035,18 @@ int leftBitCount(int x) {
  *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 12
  *   Rating: 4 
+ * 
+ * 如果x不为0，那么LSB为1，否则为0
+ * LSB ^ 0x1 = ~LSB
  */
 int logicalNeg(int x) {
-  return 2;
+  x |= x >> 1;
+  x |= x >> 2;
+  x |= x >> 4;
+  x |= x>> 8;
+  x |= x >> 16;
+
+  return (0x1 & x) ^ 0x1;
 }
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
