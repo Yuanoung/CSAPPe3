@@ -1008,8 +1008,9 @@ int isZero(int x) {
  *   Max ops: 6
  *   Rating: 2 
  */
-int leastBitPos(int x) {
-  return 2;
+int leastBitPos(int x) 
+{
+  return x & (~x + 1);
 }
 /*
  * leftBitCount - returns count of number of consective 1's in
