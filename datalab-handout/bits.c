@@ -546,8 +546,11 @@ int dividePower2(int x, int n) {
  *   Max ops: 8
  *   Rating: 1
  */
-int evenBits(void) {
-  return 2;
+int evenBits(void) 
+{
+  int mask = 0x55;
+  mask |= mask << 8;
+  return mask | (mask << 16);
 }
 /*
  * ezThreeFourths - multiplies by 3/4 rounding toward 0,
