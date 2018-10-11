@@ -1110,7 +1110,10 @@ int negate(int x) {
  *   Rating: 2
  */
 int oddBits(void) {
-  return 2;
+  int x = 0xAA | (0xAA << 8);
+  x |= x << 16;
+  
+  return x;
 }
 /* 
  * remainderPower2 - Compute x%(2^n), for 0 <= n <= 30
