@@ -1266,7 +1266,7 @@ int tmax(void) {
  *   Rating: 1
  */
 int tmin(void) {
-  return 2;
+  return 1 << 31;
 }
 /*
  * trueFiveEighths - multiplies by 5/8 rounding toward 0,
