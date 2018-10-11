@@ -987,7 +987,7 @@ int isTmin(int x) {
  *   Rating: 1
  */
 int isZero(int x) {
-  return 2;
+  return !x;
 }
 /* 
  * leastBitPos - return a mask that marks the position of the
