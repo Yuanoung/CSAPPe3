@@ -946,7 +946,8 @@ int isPallindrome(int x) {
  *   Rating: 2
  */
 int isPositive(int x) {
-  return 2;
+  int sign = (x >> 31) & 0x1;
+  return !sign & !!x;
 }
 /*
  * isPower2 - returns 1 if x is a power of 2, and 0 otherwise
