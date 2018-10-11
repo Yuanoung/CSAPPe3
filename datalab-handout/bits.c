@@ -780,10 +780,24 @@ int getByte(int x, int n)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 70
  *   Rating: 4 
+ * 
+ * 将从最高位为1的开始，一直到LSB置为1.
+ * 
+ * x ^ ((x >> 1) & mask):  这里为什么要mask呢？
+ * 如果x为负数，这最后的结果为0，但是最后的结果应该为0x80000000
  */
-int greatestBitPos(int x) {
-  return 2;
+int greatestBitPos(int x)
+{
+    int mask = (1 << 31) + ~0;
+    x |= x >> 1;
+    x |= x >> 2;
+    x |= x >> 4;
+    x |= x >> 8;
+    x |= x >> 16;
+
+    return x ^ ((x >> 1) & mask);
 }
+
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
  *  Examples: howManyBits(12) = 5
