@@ -1055,9 +1055,17 @@ int logicalNeg(int x) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3 
+ * 
+ * int mask = ((!!n & 0x1) << move) + ~0;
+ * 这里为什么要!!n & 0x1， 因为0这种情况需要特殊处理。
+ * n=0，move=32，mask=～0，不加则mask为0
  */
-int logicalShift(int x, int n) {
-  return 2;
+int logicalShift(int x, int n)
+{
+    x >>= n;
+    int move = 32 + (~n + 1);
+    int mask = ((!!n & 0x1) << move) + ~0;
+    return x & mask;
 }
 /* 
  * minusOne - return a value of -1 
