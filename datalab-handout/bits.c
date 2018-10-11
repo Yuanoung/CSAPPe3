@@ -196,7 +196,7 @@ int allEvenBits(int x)
 
     x &= x >> 16;     
     x &= x >> 8;
-    return !(x & mask ^ mask);
+    return !((x & mask) ^ mask);
 }
 
 /* 
@@ -213,7 +213,7 @@ int allOddBits(int x)
 
   x &= x >> 16;     
   x &= x >> 8;
-  return !(x & mask ^ mask);
+  return !((x & mask) ^ mask);
 }
 
 /* 
@@ -265,7 +265,7 @@ int bang(int x)
     x |= x >> 1;
 
     // 对LSB取反
-    return 0x1 & x ^ 0x1;
+    return (0x1 & x) ^ 0x1;
 }
 
 /* 
@@ -371,7 +371,7 @@ int bitMask(int highbit, int lowbit)
  * x^y: 相同位为0, 不同位为1.
  */
 int bitMatch(int x, int y) {
-  return ~(x ^ y);
+  return (~(x & ~y) & ~(~x & y));
 }
 
 /* 
