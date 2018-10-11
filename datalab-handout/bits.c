@@ -1007,6 +1007,11 @@ int isZero(int x) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 6
  *   Rating: 2 
+ * 
+ * x = 96       = 1001 0110
+ * ~x+1         = 0110 1011
+ * x & (~x + 1) = 0000 0010
+ * 
  */
 int leastBitPos(int x) 
 {
