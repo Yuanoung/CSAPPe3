@@ -537,9 +537,15 @@ int distinctNegation(int x)
  *   Max ops: 15
  *   Rating: 2
  */
-int dividePower2(int x, int n) {
-    return 2;
+int dividePower2(int x, int n) 
+{
+    int mask = (1 << n) + ~0;
+    int neg = (x >> 31) & 0x1;
+    int bias = (mask + !neg) & mask;
+
+    return (x + bias) >> n;
 }
+
 /* 
  * evenBits - return word with all even-numbered bits set to 1
  *   Legal ops: ! ~ & ^ | + << >>
