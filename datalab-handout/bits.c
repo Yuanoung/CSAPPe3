@@ -1101,7 +1101,7 @@ int multFiveEighths(int x) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return ~x + 1;
 }
 /* 
  * oddBits - return word with all odd-numbered bits set to 1
