@@ -149,7 +149,7 @@ NOTES:
  */
 int absVal(int x)
 {
-    int mask = ~1 + 1;                  // 0xFFFFFFFF
+    int mask = ~0;                      // 0xFFFFFFFF
     int neg = (x >> 31) & 0x1;          // x is negative？
     return ((mask + !neg) ^ x) + neg;
 }
@@ -163,7 +163,7 @@ int absVal(int x)
  *   Rating: 3
  * 
  * sum = x + y
- * 当x，y符号相同，sum与x（或者y）符号不同是，发生溢出
+ * 当x，y符号相同，sum与x（或者y）符号不同时，发生溢出
  */
 int addOK(int x, int y)
 {
@@ -196,7 +196,7 @@ int allEvenBits(int x)
 
     x &= x >> 16;     
     x &= x >> 8;
-    return !(x & mask ^ mask);
+    return !((x & mask) ^ mask);
 }
 
 /* 
@@ -213,7 +213,7 @@ int allOddBits(int x)
 
   x &= x >> 16;     
   x &= x >> 8;
-  return !(x & mask ^ mask);
+  return !((x & mask) ^ mask);
 }
 
 /* 
@@ -257,14 +257,15 @@ int anyOddBit(int x) {
  */
 int bang(int x)
 {
-    // 经过以下移位e,如果x有某一位为1,那么x的最低有效位为1,否则为0
+    // 经过以下移位,如果x有某一位为1,那么x的最低有效位为1,否则为0
     x |= x >> 16;
     x |= x >> 8;
     x |= x >> 4;
     x |= x >> 2;
     x |= x >> 1;
 
-    return 0x1 & x ^ 0x1;
+    // 对LSB取反
+    return (0x1 & x) ^ 0x1;
 }
 
 /* 
@@ -273,6 +274,8 @@ int bang(int x)
  *   Legal ops: ~ |
  *   Max ops: 8
  *   Rating: 1
+ * 
+ * 一个定律
  */
 int bitAnd(int x, int y) 
 {
@@ -342,10 +345,21 @@ int bitCount(int x)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 16
  *   Rating: 3
+ * 
+ * bitMask(5,3)  = 0x38
+ *  11 1111 - 00 0111 = 0x38
+ *  result = (((1 << highbit) + ~0) << 1) + 1;            (1)
+ *  为什么不写成：
+ *      result = (((1 << highbit + 1) + ~0) << 1) + 1;    (2)
+ *  因为当highbit = 31时，对于(1)result为0xFFFFFFFF, 而对于(2)result为0
  */
-int bitMask(int highbit, int lowbit) {
-  return 2;
+int bitMask(int highbit, int lowbit)
+{
+    int result = (((1 << highbit) + ~0) << 1) + 1;
+    result = result >> lowbit << lowbit;
+    return result;
 }
+
 /* 
  * bitMatch - Create mask indicating which bits in x match those in y
  *            using only ~ and & 
@@ -353,10 +367,14 @@ int bitMask(int highbit, int lowbit) {
  *   Legal ops: ~ &
  *   Max ops: 14
  *   Rating: 1
+ * 
+ * x^y: 相同位为0, 不同位为1.
+ * 然后转成符号只包含 ~ &
  */
 int bitMatch(int x, int y) {
-  return 2;
+  return ~(x & ~y) & ~(~x & y);
 }
+
 /* 
  * bitNor - ~(x|y) using only ~ and & 
  *   Example: bitNor(0x6, 0x5) = 0xFFFFFFF8
@@ -364,9 +382,11 @@ int bitMatch(int x, int y) {
  *   Max ops: 8
  *   Rating: 1
  */
-int bitNor(int x, int y) {
-  return 2;
+int bitNor(int x, int y) 
+{
+  return ~x & ~y;
 }
+
 /* 
  * bitOr - x|y using only ~ and & 
  *   Example: bitOr(6, 5) = 7
@@ -375,18 +395,29 @@ int bitNor(int x, int y) {
  *   Rating: 1
  */
 int bitOr(int x, int y) {
-  return 2;
+  return ~(~x & ~y);
 }
+
 /*
  * bitParity - returns 1 if x contains an odd number of 0's
  *   Examples: bitParity(5) = 0, bitParity(7) = 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 4
+ * 
+ * 奇数个零，也就是奇数个1.
+ * 对于拥有奇数个1的x来说，所有位异或的结果为1
  */
-int bitParity(int x) {
-  return 2;
+int bitParity(int x) 
+{
+  x ^= x >> 16;
+  x ^= x >> 8;
+  x ^= x >> 4;
+  x ^= x >> 2;
+  x ^= x >> 1;
+  return x & 0x1;
 }
+
 /*
  * bitReverse - Reverse bits in a 32-bit word
  *   Examples: bitReverse(0x80000002) = 0x40000001
@@ -394,10 +425,36 @@ int bitParity(int x) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 45
  *   Rating: 4
+ * 
+ * 分治法：
+ * 如果前后16均已倒序，那么前后交换即可.
+ * 问题的规模一直缩小到前后各1位的情况．
+ * X = AB
+ * X = (X & 0x1) | ((x >> 1) & 0x1)
  */
-int bitReverse(int x) {
-    return 2;
+int bitReverse(int x)
+{
+    int mask = 0x55 | (0x55 << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 1) | ((x >> 1) & mask);
+
+    mask = 0x33 | (0x33 << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 2) | ((x >> 2) & mask);
+
+    mask = 0x0F | (0x0F << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 4) | ((x >> 4) & mask);
+
+    mask = 0xFF | (0xFF << 16);
+    x = ((x & mask) << 8) | ((x >> 8) & mask);
+
+    mask = 0xFF | (0xFF << 8);
+    x = ((x & mask) << 16) | ((x >> 16) & mask);
+
+    return x;
 }
+
 /* 
  * bitXor - x^y using only ~ and & 
  *   Example: bitXor(4, 5) = 1
@@ -405,9 +462,11 @@ int bitReverse(int x) {
  *   Max ops: 14
  *   Rating: 1
  */
-int bitXor(int x, int y) {
-  return 2;
+int bitXor(int x, int y) 
+{
+  return ~(~(x & ~y) & ~(~x & y));
 }
+
 /* 
  * byteSwap - swaps the nth byte and the mth byte
  *  Examples: byteSwap(0x12345678, 1, 3) = 0x56341278
@@ -417,19 +476,37 @@ int bitXor(int x, int y) {
  *  Max ops: 25
  *  Rating: 2
  */
-int byteSwap(int x, int n, int m) {
-    return 2;
+int byteSwap(int x, int n, int m)
+{
+    int nMove = n << 3;
+    int mMove = m << 3;
+
+    int nByte = (x >> nMove) & 0xFF;
+    int mByte = (x >> mMove) & 0xFF;
+    x = x ^ (nByte << nMove) ^ (mByte << mMove); // 对应的位清零
+    return x | (nByte << mMove) | (mByte << nMove); // 设置交换
 }
+
 /* 
  * conditional - same as x ? y : z 
  *   Example: conditional(2,4,5) = 4
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 16
  *   Rating: 3
+ * 
+ * if x == 0:
+ *    mask = ~0 + !x = 0
+ *    (mask & y) | (~mask & z) = z
+ * if x != 0:
+ *    mask = ~0 + !x = 0xFFFFFFFF
+ *    (mask & y) | (~mask & z) = y
  */
-int conditional(int x, int y, int z) {
-  return 2;
+int conditional(int x, int y, int z) 
+{
+  int mask = ~0 + !x;
+  return (mask & y) | (~mask & z);
 }
+
 /* 
  * copyLSB - set all bits of result to least significant bit of x
  *   Example: copyLSB(5) = 0xFFFFFFFF, copyLSB(6) = 0x00000000
@@ -437,8 +514,9 @@ int conditional(int x, int y, int z) {
  *   Max ops: 5
  *   Rating: 2
  */
-int copyLSB(int x) {
-  return 2;
+int copyLSB(int x) 
+{
+  return ~0 + !(x & 0x1);
 }
 /*
  * distinctNegation - returns 1 if x != -x.
@@ -447,9 +525,11 @@ int copyLSB(int x) {
  *   Max ops: 5
  *   Rating: 2
  */
-int distinctNegation(int x) {
-  return 2;
+int distinctNegation(int x) 
+{
+  return !!(x ^ (~x + 1));
 }
+
 /* 
  * dividePower2 - Compute x/(2^n), for 0 <= n <= 30
  *  Round toward zero
@@ -458,18 +538,28 @@ int distinctNegation(int x) {
  *   Max ops: 15
  *   Rating: 2
  */
-int dividePower2(int x, int n) {
-    return 2;
+int dividePower2(int x, int n) 
+{
+    int mask = (1 << n) + ~0;
+    int neg = (x >> 31) & 0x1;
+    int bias = (mask + !neg) & mask;
+
+    return (x + bias) >> n;
 }
+
 /* 
  * evenBits - return word with all even-numbered bits set to 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 8
  *   Rating: 1
  */
-int evenBits(void) {
-  return 2;
+int evenBits(void) 
+{
+  int mask = 0x55;
+  mask |= mask << 8;
+  return mask | (mask << 16);
 }
+
 /*
  * ezThreeFourths - multiplies by 3/4 rounding toward 0,
  *   Should exactly duplicate effect of C expression (x*3/4),
@@ -480,10 +570,19 @@ int evenBits(void) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 12
  *   Rating: 3
+ * 
+ * 溢出，不溢出　/4结果是一样的．书本上有证明
  */
 int ezThreeFourths(int x) {
-  return 2;
+  x = (x << 1) + x;
+
+  int mask = 3;
+  int neg = (x >> 31) & 0x1;
+  int bias = (mask + !neg) & mask;
+
+  return (x + bias) >> 2;
 }
+
 /* 
  * fitsBits - return 1 if x can be represented as an 
  *  n-bit, two's complement integer.
@@ -668,9 +767,12 @@ unsigned floatUnsigned2Float(unsigned u) {
  *   Max ops: 6
  *   Rating: 2
  */
-int getByte(int x, int n) {
-  return 2;
+int getByte(int x, int n) 
+{
+  int move = n << 3;
+  return (x >> move) & 0xFF;
 }
+
 /* 
  * greatestBitPos - return a mask that marks the position of the
  *               most significant 1 bit. If x == 0, return 0
@@ -678,10 +780,24 @@ int getByte(int x, int n) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 70
  *   Rating: 4 
+ * 
+ * 将从最高位为1的开始，一直到LSB置为1.
+ * 
+ * x ^ ((x >> 1) & mask):  这里为什么要mask呢？
+ * 如果x为负数，这最后的结果为0，但是最后的结果应该为0x80000000
  */
-int greatestBitPos(int x) {
-  return 2;
+int greatestBitPos(int x)
+{
+    int mask = (1 << 31) + ~0;
+    x |= x >> 1;
+    x |= x >> 2;
+    x |= x >> 4;
+    x |= x >> 8;
+    x |= x >> 16;
+
+    return x ^ ((x >> 1) & mask);
 }
+
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
  *  Examples: howManyBits(12) = 5
