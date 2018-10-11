@@ -381,9 +381,11 @@ int bitMatch(int x, int y) {
  *   Max ops: 8
  *   Rating: 1
  */
-int bitNor(int x, int y) {
-  return 2;
+int bitNor(int x, int y) 
+{
+  return ~x & ~y;
 }
+
 /* 
  * bitOr - x|y using only ~ and & 
  *   Example: bitOr(6, 5) = 7
