@@ -416,6 +416,7 @@ int bitParity(int x)
   x ^= x >> 1;
   return x & 0x1;
 }
+
 /*
  * bitReverse - Reverse bits in a 32-bit word
  *   Examples: bitReverse(0x80000002) = 0x40000001
@@ -423,10 +424,36 @@ int bitParity(int x)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 45
  *   Rating: 4
+ * 
+ * 分治法：
+ * 如果前后16均已倒序，那么前后交换即可.
+ * 问题的规模一直缩小到前后各1位的情况．
+ * X = AB
+ * X = (X & 0x1) | ((x >> 1) & 0x1)
  */
-int bitReverse(int x) {
-    return 2;
+int bitReverse(int x)
+{
+    int mask = 0x55 | (0x55 << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 1) | ((x >> 1) & mask);
+
+    mask = 0x33 | (0x33 << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 2) | ((x >> 2) & mask);
+
+    mask = 0x0F | (0x0F << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 4) | ((x >> 4) & mask);
+
+    mask = 0xFF | (0xFF << 16);
+    x = ((x & mask) << 8) | ((x >> 8) & mask);
+
+    mask = 0xFF | (0xFF << 8);
+    x = ((x & mask) << 16) | ((x >> 16) & mask);
+
+    return x;
 }
+
 /* 
  * bitXor - x^y using only ~ and & 
  *   Example: bitXor(4, 5) = 1
