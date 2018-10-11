@@ -369,9 +369,10 @@ int bitMask(int highbit, int lowbit)
  *   Rating: 1
  * 
  * x^y: 相同位为0, 不同位为1.
+ * 然后转成符号只包含 ~ &
  */
 int bitMatch(int x, int y) {
-  return (~(x & ~y) & ~(~x & y));
+  return ~(x & ~y) & ~(~x & y);
 }
 
 /* 
