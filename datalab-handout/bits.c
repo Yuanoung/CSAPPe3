@@ -149,7 +149,7 @@ NOTES:
  */
 int absVal(int x)
 {
-    int mask = ~1 + 1;                  // 0xFFFFFFFF
+    int mask = ~0;                      // 0xFFFFFFFF
     int neg = (x >> 31) & 0x1;          // x is negative？
     return ((mask + !neg) ^ x) + neg;
 }
@@ -348,14 +348,14 @@ int bitCount(int x)
  * 
  * bitMask(5,3)  = 0x38
  *  11 1111 - 00 0111 = 0x38
- *  result = (((1 << highbit) + (~1 + 1)) << 1) + 1;            (1)
+ *  result = (((1 << highbit) + ~0) << 1) + 1;            (1)
  *  为什么不写成：
- *      result = (((1 << highbit + 1) + (~1 + 1)) << 1) + 1;    (2)
+ *      result = (((1 << highbit + 1) + ~0) << 1) + 1;    (2)
  *  因为当highbit = 31时，对于(1)result为0xFFFFFFFF, 而对于(2)result为0
  */
 int bitMask(int highbit, int lowbit)
 {
-    int result = (((1 << highbit) + (~1 + 1)) << 1) + 1;
+    int result = (((1 << highbit) + ~0) << 1) + 1;
     result = result >> lowbit << lowbit;
     return result;
 }
