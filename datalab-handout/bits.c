@@ -895,7 +895,8 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 2
  */
 int isNegative(int x) {
-  return 2;
+  int sign = (x >> 31) & 0x1;
+  return sign;
 }
 /* 
  * isNonNegative - return 1 if x >= 0, return 0 otherwise 
