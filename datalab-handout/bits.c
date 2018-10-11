@@ -524,9 +524,11 @@ int copyLSB(int x)
  *   Max ops: 5
  *   Rating: 2
  */
-int distinctNegation(int x) {
-  return 2;
+int distinctNegation(int x) 
+{
+  return !!(x ^ (~x + 1));
 }
+
 /* 
  * dividePower2 - Compute x/(2^n), for 0 <= n <= 30
  *  Round toward zero
