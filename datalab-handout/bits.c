@@ -1112,7 +1112,7 @@ int negate(int x) {
 int oddBits(void) {
   int x = 0xAA | (0xAA << 8);
   x |= x << 16;
-  
+
   return x;
 }
 /* 
@@ -1257,7 +1257,7 @@ int thirdBits(void) {
  *   Rating: 1
  */
 int tmax(void) {
-  return 2;
+  return (1 << 31) + ~0;
 }
 /* 
  * tmin - return minimum two's complement integer 
