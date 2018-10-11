@@ -367,10 +367,13 @@ int bitMask(int highbit, int lowbit)
  *   Legal ops: ~ &
  *   Max ops: 14
  *   Rating: 1
+ * 
+ * x^y: 相同位为0, 不同位为1.
  */
 int bitMatch(int x, int y) {
-  return 2;
+  return ~(x ^ y);
 }
+
 /* 
  * bitNor - ~(x|y) using only ~ and & 
  *   Example: bitNor(0x6, 0x5) = 0xFFFFFFF8
