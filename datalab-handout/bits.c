@@ -345,10 +345,21 @@ int bitCount(int x)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 16
  *   Rating: 3
+ * 
+ * bitMask(5,3)  = 0x38
+ *  11 1111 - 00 0111 = 0x38
+ *  result = (((1 << highbit) + (~1 + 1)) << 1) + 1;            (1)
+ *  为什么不写成：
+ *      result = (((1 << highbit + 1) + (~1 + 1)) << 1) + 1;    (2)
+ *  因为当highbit = 31时，对于(1)result为0xFFFFFFFF, 而对于(2)result为0
  */
-int bitMask(int highbit, int lowbit) {
-  return 2;
+int bitMask(int highbit, int lowbit)
+{
+    int result = (((1 << highbit) + (~1 + 1)) << 1) + 1;
+    result = result >> lowbit << lowbit;
+    return result;
 }
+
 /* 
  * bitMatch - Create mask indicating which bits in x match those in y
  *            using only ~ and & 
