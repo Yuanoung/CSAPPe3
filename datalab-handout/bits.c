@@ -396,15 +396,25 @@ int bitNor(int x, int y)
 int bitOr(int x, int y) {
   return ~(~x & ~y);
 }
+
 /*
  * bitParity - returns 1 if x contains an odd number of 0's
  *   Examples: bitParity(5) = 0, bitParity(7) = 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 4
+ * 
+ * 奇数个零，也就是奇数个1.
+ * 对于拥有奇数个1的x来说，所有位异或的结果为1
  */
-int bitParity(int x) {
-  return 2;
+int bitParity(int x) 
+{
+  x ^= x >> 16;
+  x ^= x >> 8;
+  x ^= x >> 4;
+  x ^= x >> 2;
+  x ^= x >> 1;
+  return x & 0x1;
 }
 /*
  * bitReverse - Reverse bits in a 32-bit word
