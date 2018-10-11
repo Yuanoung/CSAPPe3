@@ -492,9 +492,18 @@ int byteSwap(int x, int n, int m)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 16
  *   Rating: 3
+ * 
+ * if x == 0:
+ *    mask = ~0 + !x = 0
+ *    (mask & y) | (~mask & z) = z
+ * if x != 0:
+ *    mask = ~0 + !x = 0xFFFFFFFF
+ *    (mask & y) | (~mask & z) = y
  */
-int conditional(int x, int y, int z) {
-  return 2;
+int conditional(int x, int y, int z) 
+{
+  int mask = ~0 + !x;
+  return (mask & y) | (~mask & z);
 }
 /* 
  * copyLSB - set all bits of result to least significant bit of x
