@@ -1072,10 +1072,13 @@ int logicalShift(int x, int n)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 2
  *   Rating: 1
+ * 
+ * -1 == ~0 = ~1 + 1 = 0xFFFFFFFF
  */
 int minusOne(void) {
-  return 2;
+  return ~0;
 }
+
 /*
  * multFiveEighths - multiplies by 5/8 rounding toward 0.
  *   Should exactly duplicate effect of C expression (x*5/8),
