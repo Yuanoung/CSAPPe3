@@ -767,9 +767,12 @@ unsigned floatUnsigned2Float(unsigned u) {
  *   Max ops: 6
  *   Rating: 2
  */
-int getByte(int x, int n) {
-  return 2;
+int getByte(int x, int n) 
+{
+  int move = n << 3;
+  return (x >> move) & 0xFF;
 }
+
 /* 
  * greatestBitPos - return a mask that marks the position of the
  *               most significant 1 bit. If x == 0, return 0
