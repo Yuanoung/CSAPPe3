@@ -1135,8 +1135,11 @@ int remainderPower2(int x, int n) {
  *   Max ops: 10
  *   Rating: 3
  */
-int replaceByte(int x, int n, int c) {
-  return 2;
+int replaceByte(int x, int n, int c)
+{
+    int step = n << 3;
+    x ^= ((x >> step) & 0xFF) << step;
+    return x | (c << step);
 }
 /* 
  * rotateLeft - Rotate x to the left by n
