@@ -461,9 +461,11 @@ int bitReverse(int x)
  *   Max ops: 14
  *   Rating: 1
  */
-int bitXor(int x, int y) {
-  return 2;
+int bitXor(int x, int y) 
+{
+  return ~(~(x & ~y) & ~(~x & y));
 }
+
 /* 
  * byteSwap - swaps the nth byte and the mth byte
  *  Examples: byteSwap(0x12345678, 1, 3) = 0x56341278
