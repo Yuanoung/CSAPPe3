@@ -559,6 +559,7 @@ int evenBits(void)
   mask |= mask << 8;
   return mask | (mask << 16);
 }
+
 /*
  * ezThreeFourths - multiplies by 3/4 rounding toward 0,
  *   Should exactly duplicate effect of C expression (x*3/4),
@@ -569,10 +570,19 @@ int evenBits(void)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 12
  *   Rating: 3
+ * 
+ * 溢出，不溢出　/4结果是一样的．书本上有证明
  */
 int ezThreeFourths(int x) {
-  return 2;
+  x = (x << 1) + x;
+
+  int mask = 3;
+  int neg = (x >> 31) & 0x1;
+  int bias = (mask + !neg) & mask;
+
+  return (x + bias) >> 2;
 }
+
 /* 
  * fitsBits - return 1 if x can be represented as an 
  *  n-bit, two's complement integer.
