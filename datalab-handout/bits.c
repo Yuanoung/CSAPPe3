@@ -475,9 +475,17 @@ int bitXor(int x, int y)
  *  Max ops: 25
  *  Rating: 2
  */
-int byteSwap(int x, int n, int m) {
-    return 2;
+int byteSwap(int x, int n, int m)
+{
+    int nMove = n << 3;
+    int mMove = m << 3;
+
+    int nByte = (x >> nMove) & 0xFF;
+    int mByte = (x >> mMove) & 0xFF;
+    x = x ^ (nByte << nMove) ^ (mByte << mMove); // 对应的位清零
+    return x | (nByte << mMove) | (mByte << nMove); // 设置交换
 }
+
 /* 
  * conditional - same as x ? y : z 
  *   Example: conditional(2,4,5) = 4
