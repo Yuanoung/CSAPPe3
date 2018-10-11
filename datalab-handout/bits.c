@@ -906,7 +906,8 @@ int isNegative(int x) {
  *   Rating: 2
  */
 int isNonNegative(int x) {
-  return 2;
+  int sign = (x >> 31) & 0x1;
+  return !sign;
 }
 /* 
  * isNonZero - Check whether x is nonzero using
