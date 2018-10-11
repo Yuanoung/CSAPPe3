@@ -163,7 +163,7 @@ int absVal(int x)
  *   Rating: 3
  * 
  * sum = x + y
- * 当x，y符号相同，sum与x（或者y）符号不同是，发生溢出
+ * 当x，y符号相同，sum与x（或者y）符号不同时，发生溢出
  */
 int addOK(int x, int y)
 {
@@ -257,13 +257,14 @@ int anyOddBit(int x) {
  */
 int bang(int x)
 {
-    // 经过以下移位e,如果x有某一位为1,那么x的最低有效位为1,否则为0
+    // 经过以下移位,如果x有某一位为1,那么x的最低有效位为1,否则为0
     x |= x >> 16;
     x |= x >> 8;
     x |= x >> 4;
     x |= x >> 2;
     x |= x >> 1;
 
+    // 对LSB取反
     return 0x1 & x ^ 0x1;
 }
 
@@ -273,6 +274,8 @@ int bang(int x)
  *   Legal ops: ~ |
  *   Max ops: 8
  *   Rating: 1
+ * 
+ * 一个定律
  */
 int bitAnd(int x, int y) 
 {
@@ -295,7 +298,8 @@ int bitAnd(int x, int y)
  * 10      01
  * 11      10
  * 通过观察我们可以发现A+B=R，而且AB所在的位正好可以表示R。也就是说
- * R = （A>>1) + B
+ * X = AB
+ * X = ((A >> 1) & 0x1) + (B & 0x1)
  * 
  * 前后各2位，也是同样的思路，只不过要在 前后各一位 的基础上。
  * 这样一直计算到前后各16位，最终的结果就是我们想要的
