@@ -855,7 +855,7 @@ int isAsciiDigit(int x) {
  *   Rating: 2
  */
 int isEqual(int x, int y) {
-  return 2;
+  return !(x ^ y);
 }
 /* 
  * isGreater - if x > y  then return 1, else return 0 
