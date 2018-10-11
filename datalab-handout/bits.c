@@ -975,10 +975,15 @@ int isTmax(int x) {
  *   Legal ops: ! ~ & ^ | +
  *   Max ops: 10
  *   Rating: 1
+ * 
+ * -x = ~x + 1 == x 的有，TMin与0
+ * 如果表达式最后不加上 & !!x,TMin与0都返回1
  */
-int isTmin(int x) {
-  return 2;
+int isTmin(int x) 
+{
+  return !(x ^ (~x + 1))  & !!x;
 }
+
 /*
  * isZero - returns 1 if x == 0, and 0 otherwise 
  *   Examples: isZero(5) = 0, isZero(0) = 1
