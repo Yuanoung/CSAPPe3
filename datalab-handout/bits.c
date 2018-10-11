@@ -505,6 +505,7 @@ int conditional(int x, int y, int z)
   int mask = ~0 + !x;
   return (mask & y) | (~mask & z);
 }
+
 /* 
  * copyLSB - set all bits of result to least significant bit of x
  *   Example: copyLSB(5) = 0xFFFFFFFF, copyLSB(6) = 0x00000000
@@ -512,8 +513,9 @@ int conditional(int x, int y, int z)
  *   Max ops: 5
  *   Rating: 2
  */
-int copyLSB(int x) {
-  return 2;
+int copyLSB(int x) 
+{
+  return ~0 + !(x & 0x1);
 }
 /*
  * distinctNegation - returns 1 if x != -x.
