@@ -959,16 +959,22 @@ int isPositive(int x) {
 int isPower2(int x) {
   return 2;
 }
+
 /*
  * isTmax - returns 1 if x is the maximum, two's complement number,
  *     and 0 otherwise 
  *   Legal ops: ! ~ & ^ | +
  *   Max ops: 10
  *   Rating: 1
+ * 
+ * x+1 = ~x 的有 0x7FFFFFFF, 0xFFFFFFFF
+ * 结果屏蔽掉0xFFFFFFFF就可以了
  */
-int isTmax(int x) {
-  return 2;
+int isTmax(int x) 
+{
+  return !((x + 1) ^ (~x)) & !!(x + 1);
 }
+
 /*
  * isTmin - returns 1 if x is the minimum, two's complement number,
  *     and 0 otherwise 
