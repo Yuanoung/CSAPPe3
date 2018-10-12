@@ -977,10 +977,29 @@ int isPositive(int x) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 4
+ * 
+ * 只需证明除了符号位外，其他位只有一个1.
+ * 
+ * x      00800000
+ * step1: 00FFFFFF
+ * step2: 007FFFFF
+ * step3: 00800000
+ * step4: !(step3 ^ x)
+ * 
  */
-int isPower2(int x) {
-  return 2;
+int isPower2(int x)
+{
+    int dup = x;
+    x |= x >> 1;
+    x |= x >> 2;
+    x |= x >> 4;
+    x |= x >> 8;
+    x |= x >> 16;
+    x >>= 1;
+    x += 1;
+    return !(x ^ dup);
 }
+
 
 /*
  * isTmax - returns 1 if x is the maximum, two's complement number,
