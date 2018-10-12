@@ -1212,10 +1212,28 @@ int satMul3(int x) {
  *  Legal ops: ! ~ & ^ | + << >>
  *  Max ops: 10
  *  Rating: 2
+ * 
+ * s是符号位，　mask = 0xFFFFFFFF(-1)
+ * mask + !s: 如果x为负数，结果为-1,如果x为非负数，结果为0.
+ * 这不是我们想要的，怎么加上一个数，才能满足题目的条件?
+ * 
+ *      负  正  零
+ * s    1   0   0
+ * !x   0   0   1
+ * 
+ * 这个数：1) 负数为0,
+ *        2) 正数为1,
+ *       3)  零为0
+ * 可以得到这个数为: !(s ^ !x)
  */
-int sign(int x) {
-    return 2;
+int sign(int x)
+{
+    int mask = ~0;
+    int s = (x >> 31) & 0x1;
+
+    return mask + !s + !(s ^ !x);
 }
+
 /* 
  * signMag2TwosComp - Convert from sign-magnitude to two's complement
  *   where the MSB is the sign bit
@@ -1272,9 +1290,13 @@ int subtractionOK(int x, int y)
  *   Max ops: 8
  *   Rating: 1
  */
-int thirdBits(void) {
-  return 2;
+int thirdBits(void)
+{
+    int r = 0x49 | (0x49 << 9);
+    r |= r << 18;
+    return r;
 }
+
 /* 
  * TMax - return maximum two's complement integer 
  *   Legal ops: ! ~ & ^ | + << >>
