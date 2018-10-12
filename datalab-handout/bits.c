@@ -1241,10 +1241,21 @@ int sign(int x)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 15
  *   Rating: 4
+ * 
+ * 题意: 如果为负数，将符号位置为０后取反＋１;正数则不变
+ * 
+ * x为正数: x = (x ^ (0xFFFFFFFF + 1)) + 0
+ * x为负数: x = (x ^ (0xFFFFFFFF + 0)) + 1
+ *         x = (x ^ (mask + !sign)) + sign
  */
-int signMag2TwosComp(int x) {
-  return 2;
+int signMag2TwosComp(int x)
+{
+    int mask = ~0;
+    int sign = (x >> 31) & 0x1;
+    x = x & ((1 << 31) + ~0);   // 符号位置为0
+    return (x ^ (mask + !sign)) + sign;
 }
+
 /* 
  * specialBits - return bit pattern 0xffca3fff
  *   Legal ops: ! ~ & ^ | + << >>
