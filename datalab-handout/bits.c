@@ -938,7 +938,26 @@ int isNotEqual(int x, int y) {
  *   Rating: 4
  */
 int isPallindrome(int x) {
-    return 2;
+    int s = x;
+    int mask = 0x55 | (0x55 << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 1) | ((x >> 1) & mask);
+
+    mask = 0x33 | (0x33 << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 2) | ((x >> 2) & mask);
+
+    mask = 0x0F | (0x0F << 8);
+    mask |= mask << 16;
+    x = ((x & mask) << 4) | ((x >> 4) & mask);
+
+    mask = 0xFF | (0xFF << 16);
+    x = ((x & mask) << 8) | ((x >> 8) & mask);
+
+    mask = 0xFF | (0xFF << 8);
+    x = ((x & mask) << 16) | ((x >> 16) & mask);
+
+    return !(x ^ s);
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
