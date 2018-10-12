@@ -1232,9 +1232,16 @@ int signMag2TwosComp(int x) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 3
  *   Rating: 1
+ * 
+ * 11111111110010100011111111111111
+ *           00101000
+ *                         11010111
+ *           11010111(左移14位，然后取反)
  */
-int specialBits(void) {
-    return 2;
+int specialBits(void)
+{
+    int x = 0xD7 << 14;
+    return ~x;
 }
 /* 
  * subtractionOK - Determine if can compute x-y without overflow
