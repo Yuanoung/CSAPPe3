@@ -1250,10 +1250,22 @@ int specialBits(void)
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3
+ * 
+ * x与y符号不同，相减才有可能溢出
+ * s = x - y
+ * s与ｘ符号不同，发生溢出
  */
-int subtractionOK(int x, int y) {
-  return 2;
+int subtractionOK(int x, int y)
+{
+    int negativeY = ~y + 1;
+    int s = x + (~y + 1);
+
+    int xy = x ^ y;
+    int xs = x ^ s;
+
+    return !(((xy & xs) >> 31) & 0x1);
 }
+
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
  *   Legal ops: ! ~ & ^ | + << >>
