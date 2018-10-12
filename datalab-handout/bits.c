@@ -430,7 +430,7 @@ int bitParity(int x)
  * 如果前后16均已倒序，那么前后交换即可.
  * 问题的规模一直缩小到前后各1位的情况．
  * X = AB
- * X = (X & 0x1) | ((x >> 1) & 0x1)
+ * X = ((X & 0x1) << 1) | ((x >> 1) & 0x1)
  */
 int bitReverse(int x)
 {
@@ -928,7 +928,7 @@ int isNonZero(int x) {
  *   Rating: 2
  */
 int isNotEqual(int x, int y) {
-  return 2;
+  return !!(x ^ y);
 }
 /*
  * isPallindrome - Return 1 if bit pattern in x is equal to its mirror image
