@@ -1175,10 +1175,27 @@ int rotateRight(int x, int n) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 30
  *   Rating: 4
+ * 
+ * s = x + y
+ * 发生正溢出:      0x7FFFFFFF & (结果 & (~0 + no_overflow))
+ * 发生负溢出:      0x80000000 & (结果 & (~0 + no_overflow))
+ * 没有发生溢出:     0xFFFFFFFF & (结果 & (~0 + no_overflow))
  */
-int satAdd(int x, int y) {
-  return 2;
+int satAdd(int x, int y)
+{
+    int s = x + y;
+
+    int neg_overflow = ((x & y & ~s) >> 31) & 0x1;
+    int pos_overflow = ((~x & ~y & s) >> 31) & 0x1;
+    int no_overflow = !(neg_overflow | pos_overflow);
+
+    int neg_overflow_mask = neg_overflow << 31;
+    int pos_overflow_mask = (pos_overflow << 31) + ~0 + !pos_overflow;
+    int no_overflow_mask = (~no_overflow + 1);
+
+    return (neg_overflow_mask | pos_overflow_mask | no_overflow_mask) & (s | (~0 + no_overflow));
 }
+
 /*
  * satMul2 - multiplies by 2, saturating to Tmin or Tmax if overflow
  *   Examples: satMul2(0x30000000) = 0x60000000
