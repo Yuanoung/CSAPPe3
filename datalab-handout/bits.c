@@ -540,9 +540,12 @@ int distinctNegation(int x)
  */
 int dividePower2(int x, int n) 
 {
-    int mask = (1 << n) + ~0;
-    int neg = (x >> 31) & 0x1;
-    int bias = (mask + !neg) & mask;
+    // int mask = (1 << n) + ~0;
+    // int neg = (x >> 31) & 0x1;
+    // int bias = (mask + !neg) & mask;
+
+    int bias = (x >> 31);
+    bias ^= bias << n;
 
     return (x + bias) >> n;
 }
