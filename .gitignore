@@ -1,3 +1,5 @@
 ./vscode/*
 */MyTeSt.c
 */a.out
+*.s 
+*.o 

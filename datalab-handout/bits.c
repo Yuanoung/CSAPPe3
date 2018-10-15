@@ -899,7 +899,12 @@ int isLess(int x, int y) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+    int ny = ~y;
+    int v1 = x & ny;
+    int v2 = x ^ ny;
+    int v3 = x + ny;
+    int v4 = (v2 & v3) | v1;
+    return (v4 >> 31) & 0x1;
 }
 /* 
  * isNegative - return 1 if x < 0, return 0 otherwise 
