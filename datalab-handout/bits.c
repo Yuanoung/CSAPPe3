@@ -579,9 +579,12 @@ int evenBits(void)
 int ezThreeFourths(int x) {
   x = (x << 1) + x;
 
-  int mask = 3;
-  int neg = (x >> 31) & 0x1;
-  int bias = (mask + !neg) & mask;
+  // int mask = 3;
+  // int neg = (x >> 31) & 0x1;
+  // int bias = (mask + !neg) & mask;
+
+  int bias = x >> 31;
+  bias ^= bias << 2;
 
   return (x + bias) >> 2;
 }
@@ -866,9 +869,17 @@ int isEqual(int x, int y) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 24
  *   Rating: 3
+ * 
+ * ---
  */
-int isGreater(int x, int y) {
-  return 2;
+int isGreater(int x, int y)
+{
+    int ny = ~y;
+    int v1 = x & ny;
+    int v2 = x ^ ny;
+    int v3 = x + ny;
+    int v4 = (v2 & v3) | v1;
+    return !(v4 >> 31);
 }
 /* 
  * isLess - if x < y  then return 1, else return 0 
