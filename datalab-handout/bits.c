@@ -149,9 +149,9 @@ NOTES:
  */
 int absVal(int x)
 {
-    int mask = ~0;                      // 0xFFFFFFFF
-    int neg = (x >> 31) & 0x1;          // x is negative？
-    return ((mask + !neg) ^ x) + neg;
+  int mask = ~0;             // 0xFFFFFFFF
+  int neg = (x >> 31) & 0x1; // x is negative？
+  return ((mask + !neg) ^ x) + neg;
 }
 
 /* 
@@ -167,12 +167,12 @@ int absVal(int x)
  */
 int addOK(int x, int y)
 {
-    int sum = x + y;
+  int sum = x + y;
 
-    int neg_overflow = ((x & y & ~sum) >> 31) & 0x1;    // 是否负溢出
-    int pos_overflow = ((~x & ~y & sum) >> 31) & 0x1;   // 是否正溢出
+  int neg_overflow = ((x & y & ~sum) >> 31) & 0x1;  // 是否负溢出
+  int pos_overflow = ((~x & ~y & sum) >> 31) & 0x1; // 是否正溢出
 
-    return !(neg_overflow | pos_overflow);
+  return !(neg_overflow | pos_overflow);
 }
 
 /* 
@@ -192,11 +192,11 @@ int addOK(int x, int y)
  */
 int allEvenBits(int x)
 {
-    int mask = 0x55;  // 0101 0101
+  int mask = 0x55; // 0101 0101
 
-    x &= x >> 16;     
-    x &= x >> 8;
-    return !((x & mask) ^ mask);
+  x &= x >> 16;
+  x &= x >> 8;
+  return !((x & mask) ^ mask);
 }
 
 /* 
@@ -207,11 +207,11 @@ int allEvenBits(int x)
  *   Max ops: 12
  *   Rating: 2
  */
-int allOddBits(int x) 
+int allOddBits(int x)
 {
-  int mask = 0xAA;  // 1010 1010
+  int mask = 0xAA; // 1010 1010
 
-  x &= x >> 16;     
+  x &= x >> 16;
   x &= x >> 8;
   return !((x & mask) ^ mask);
 }
@@ -224,10 +224,11 @@ int allOddBits(int x)
  *   Max ops: 12
  *   Rating: 2
  */
-int anyEvenBit(int x) {
-  int mask = 0x55;  // 0101 0101
+int anyEvenBit(int x)
+{
+  int mask = 0x55; // 0101 0101
 
-  x |= x >> 16;     
+  x |= x >> 16;
   x |= x >> 8;
   return !!(x & mask);
 }
@@ -240,10 +241,11 @@ int anyEvenBit(int x) {
  *   Max ops: 12
  *   Rating: 2
  */
-int anyOddBit(int x) {
-  int mask = 0xAA;  // 1010 1010
+int anyOddBit(int x)
+{
+  int mask = 0xAA; // 1010 1010
 
-  x |= x >> 16;     
+  x |= x >> 16;
   x |= x >> 8;
   return !!(x & mask);
 }
@@ -257,15 +259,15 @@ int anyOddBit(int x) {
  */
 int bang(int x)
 {
-    // 经过以下移位,如果x有某一位为1,那么x的最低有效位为1,否则为0
-    x |= x >> 16;
-    x |= x >> 8;
-    x |= x >> 4;
-    x |= x >> 2;
-    x |= x >> 1;
+  // 经过以下移位,如果x有某一位为1,那么x的最低有效位为1,否则为0
+  x |= x >> 16;
+  x |= x >> 8;
+  x |= x >> 4;
+  x |= x >> 2;
+  x |= x >> 1;
 
-    // 对LSB取反
-    return (0x1 & x) ^ 0x1;
+  // 对LSB取反
+  return (0x1 & x) ^ 0x1;
 }
 
 /* 
@@ -277,7 +279,7 @@ int bang(int x)
  * 
  * 一个定律
  */
-int bitAnd(int x, int y) 
+int bitAnd(int x, int y)
 {
   return ~(~x | ~y);
 }
@@ -315,25 +317,25 @@ int bitAnd(int x, int y)
  */
 int bitCount(int x)
 {
-    int mask = 0x55 | (0x55 << 8);  // mask=0x55555555
-    mask |= mask << 16;
-    x = (x & mask) + ((x >> 1) & mask);
+  int mask = 0x55 | (0x55 << 8); // mask=0x55555555
+  mask |= mask << 16;
+  x = (x & mask) + ((x >> 1) & mask);
 
-    mask = 0x33 | (0x33 << 8);      // mask=0x33333333
-    mask |= mask << 16;
-    x = (x & mask) + ((x >> 2) & mask);
+  mask = 0x33 | (0x33 << 8); // mask=0x33333333
+  mask |= mask << 16;
+  x = (x & mask) + ((x >> 2) & mask);
 
-    mask = 0x0F | (0x0F << 8);      // mask=0x0F0F0F0F
-    mask |= mask << 16;
-    x = (x & mask) + ((x >> 4) & mask);
+  mask = 0x0F | (0x0F << 8); // mask=0x0F0F0F0F
+  mask |= mask << 16;
+  x = (x & mask) + ((x >> 4) & mask);
 
-    mask = 0xFF | (0xFF << 16);     // mask=0x00FF00FF
-    x = (x & mask) + ((x >> 8) & mask);
+  mask = 0xFF | (0xFF << 16); // mask=0x00FF00FF
+  x = (x & mask) + ((x >> 8) & mask);
 
-    mask = 0xFF | (0xFF << 8);      // mask=0x0000FFFF
-    x = (x & mask) + ((x >> 16) & mask);
+  mask = 0xFF | (0xFF << 8); // mask=0x0000FFFF
+  x = (x & mask) + ((x >> 16) & mask);
 
-    return x;
+  return x;
 }
 
 /* 
@@ -355,9 +357,9 @@ int bitCount(int x)
  */
 int bitMask(int highbit, int lowbit)
 {
-    int result = (((1 << highbit) + ~0) << 1) + 1;
-    result = result >> lowbit << lowbit;
-    return result;
+  int result = (((1 << highbit) + ~0) << 1) + 1;
+  result = result >> lowbit << lowbit;
+  return result;
 }
 
 /* 
@@ -371,7 +373,8 @@ int bitMask(int highbit, int lowbit)
  * x^y: 相同位为0, 不同位为1.
  * 然后转成符号只包含 ~ &
  */
-int bitMatch(int x, int y) {
+int bitMatch(int x, int y)
+{
   return ~(x & ~y) & ~(~x & y);
 }
 
@@ -382,7 +385,7 @@ int bitMatch(int x, int y) {
  *   Max ops: 8
  *   Rating: 1
  */
-int bitNor(int x, int y) 
+int bitNor(int x, int y)
 {
   return ~x & ~y;
 }
@@ -394,7 +397,8 @@ int bitNor(int x, int y)
  *   Max ops: 8
  *   Rating: 1
  */
-int bitOr(int x, int y) {
+int bitOr(int x, int y)
+{
   return ~(~x & ~y);
 }
 
@@ -408,7 +412,7 @@ int bitOr(int x, int y) {
  * 奇数个零，也就是奇数个1.
  * 对于拥有奇数个1的x来说，所有位异或的结果为1
  */
-int bitParity(int x) 
+int bitParity(int x)
 {
   x ^= x >> 16;
   x ^= x >> 8;
@@ -434,25 +438,25 @@ int bitParity(int x)
  */
 int bitReverse(int x)
 {
-    int mask = 0x55 | (0x55 << 8);
-    mask |= mask << 16;
-    x = ((x & mask) << 1) | ((x >> 1) & mask);
+  int mask = 0x55 | (0x55 << 8);
+  mask |= mask << 16;
+  x = ((x & mask) << 1) | ((x >> 1) & mask);
 
-    mask = 0x33 | (0x33 << 8);
-    mask |= mask << 16;
-    x = ((x & mask) << 2) | ((x >> 2) & mask);
+  mask = 0x33 | (0x33 << 8);
+  mask |= mask << 16;
+  x = ((x & mask) << 2) | ((x >> 2) & mask);
 
-    mask = 0x0F | (0x0F << 8);
-    mask |= mask << 16;
-    x = ((x & mask) << 4) | ((x >> 4) & mask);
+  mask = 0x0F | (0x0F << 8);
+  mask |= mask << 16;
+  x = ((x & mask) << 4) | ((x >> 4) & mask);
 
-    mask = 0xFF | (0xFF << 16);
-    x = ((x & mask) << 8) | ((x >> 8) & mask);
+  mask = 0xFF | (0xFF << 16);
+  x = ((x & mask) << 8) | ((x >> 8) & mask);
 
-    mask = 0xFF | (0xFF << 8);
-    x = ((x & mask) << 16) | ((x >> 16) & mask);
+  mask = 0xFF | (0xFF << 8);
+  x = ((x & mask) << 16) | ((x >> 16) & mask);
 
-    return x;
+  return x;
 }
 
 /* 
@@ -462,7 +466,7 @@ int bitReverse(int x)
  *   Max ops: 14
  *   Rating: 1
  */
-int bitXor(int x, int y) 
+int bitXor(int x, int y)
 {
   return ~(~(x & ~y) & ~(~x & y));
 }
@@ -478,13 +482,13 @@ int bitXor(int x, int y)
  */
 int byteSwap(int x, int n, int m)
 {
-    int nMove = n << 3;
-    int mMove = m << 3;
+  int nMove = n << 3;
+  int mMove = m << 3;
 
-    int nByte = (x >> nMove) & 0xFF;
-    int mByte = (x >> mMove) & 0xFF;
-    x = x ^ (nByte << nMove) ^ (mByte << mMove); // 对应的位清零
-    return x | (nByte << mMove) | (mByte << nMove); // 设置交换
+  int nByte = (x >> nMove) & 0xFF;
+  int mByte = (x >> mMove) & 0xFF;
+  x = x ^ (nByte << nMove) ^ (mByte << mMove);    // 对应的位清零
+  return x | (nByte << mMove) | (mByte << nMove); // 设置交换
 }
 
 /* 
@@ -501,7 +505,7 @@ int byteSwap(int x, int n, int m)
  *    mask = ~0 + !x = 0xFFFFFFFF
  *    (mask & y) | (~mask & z) = y
  */
-int conditional(int x, int y, int z) 
+int conditional(int x, int y, int z)
 {
   int mask = ~0 + !x;
   return (mask & y) | (~mask & z);
@@ -514,7 +518,7 @@ int conditional(int x, int y, int z)
  *   Max ops: 5
  *   Rating: 2
  */
-int copyLSB(int x) 
+int copyLSB(int x)
 {
   return ~0 + !(x & 0x1);
 }
@@ -525,7 +529,7 @@ int copyLSB(int x)
  *   Max ops: 5
  *   Rating: 2
  */
-int distinctNegation(int x) 
+int distinctNegation(int x)
 {
   return !!(x ^ (~x + 1));
 }
@@ -538,16 +542,16 @@ int distinctNegation(int x)
  *   Max ops: 15
  *   Rating: 2
  */
-int dividePower2(int x, int n) 
+int dividePower2(int x, int n)
 {
-    // int mask = (1 << n) + ~0;
-    // int neg = (x >> 31) & 0x1;
-    // int bias = (mask + !neg) & mask;
+  // int mask = (1 << n) + ~0;
+  // int neg = (x >> 31) & 0x1;
+  // int bias = (mask + !neg) & mask;
 
-    int bias = (x >> 31);
-    bias ^= bias << n;
+  int bias = (x >> 31);
+  bias ^= bias << n;
 
-    return (x + bias) >> n;
+  return (x + bias) >> n;
 }
 
 /* 
@@ -556,7 +560,7 @@ int dividePower2(int x, int n)
  *   Max ops: 8
  *   Rating: 1
  */
-int evenBits(void) 
+int evenBits(void)
 {
   int mask = 0x55;
   mask |= mask << 8;
@@ -576,7 +580,8 @@ int evenBits(void)
  * 
  * 溢出，不溢出　/4结果是一样的．书本上有证明
  */
-int ezThreeFourths(int x) {
+int ezThreeFourths(int x)
+{
   x = (x << 1) + x;
 
   // int mask = 3;
@@ -597,9 +602,15 @@ int ezThreeFourths(int x) {
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 15
  *   Rating: 2
+ * 
+ * https://stackoverflow.com/questions/14792521/bitwise-operations-and-shifts
+ * 
  */
-int fitsBits(int x, int n) {
-  return 2;
+int fitsBits(int x, int n)
+{
+  int move;
+  move = 32 + (~n + 1);
+  return !(x ^ ((x << move) >> move));
 }
 /* 
  * fitsShort - return 1 if x can be represented as a 
@@ -609,8 +620,9 @@ int fitsBits(int x, int n) {
  *   Max ops: 8
  *   Rating: 1
  */
-int fitsShort(int x) {
-  return 2;
+int fitsShort(int x)
+{
+  return !(x ^ ((x << 16) >> 16));
 }
 /* 
  * floatAbsVal - Return bit-level equivalent of absolute value of f for
@@ -623,7 +635,8 @@ int fitsShort(int x) {
  *   Max ops: 10
  *   Rating: 2
  */
-unsigned floatAbsVal(unsigned uf) {
+unsigned floatAbsVal(unsigned uf)
+{
   return 2;
 }
 /* 
@@ -638,7 +651,8 @@ unsigned floatAbsVal(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
-int floatFloat2Int(unsigned uf) {
+int floatFloat2Int(unsigned uf)
+{
   return 2;
 }
 /* 
@@ -650,7 +664,8 @@ int floatFloat2Int(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned floatInt2Float(int x) {
+unsigned floatInt2Float(int x)
+{
   return 2;
 }
 /* 
@@ -664,8 +679,9 @@ unsigned floatInt2Float(int x) {
  *   Max ops: 25
  *   Rating: 2
  */
-int floatIsEqual(unsigned uf, unsigned ug) {
-    return 2;
+int floatIsEqual(unsigned uf, unsigned ug)
+{
+  return 2;
 }
 /* 
  * floatIsLess - Compute f < g for floating point arguments f and g.
@@ -678,8 +694,9 @@ int floatIsEqual(unsigned uf, unsigned ug) {
  *   Max ops: 30
  *   Rating: 3
  */
-int floatIsLess(unsigned uf, unsigned ug) {
-    return 2;
+int floatIsLess(unsigned uf, unsigned ug)
+{
+  return 2;
 }
 /* 
  * floatNegate - Return bit-level equivalent of expression -f for
@@ -692,8 +709,9 @@ int floatIsLess(unsigned uf, unsigned ug) {
  *   Max ops: 10
  *   Rating: 2
  */
-unsigned floatNegate(unsigned uf) {
- return 2;
+unsigned floatNegate(unsigned uf)
+{
+  return 2;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
@@ -708,8 +726,9 @@ unsigned floatNegate(unsigned uf) {
  *   Max ops: 30 
  *   Rating: 4
  */
-unsigned floatPower2(int x) {
-    return 2;
+unsigned floatPower2(int x)
+{
+  return 2;
 }
 /* 
  * floatScale1d2 - Return bit-level equivalent of expression 0.5*f for
@@ -722,7 +741,8 @@ unsigned floatPower2(int x) {
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned floatScale1d2(unsigned uf) {
+unsigned floatScale1d2(unsigned uf)
+{
   return 2;
 }
 /* 
@@ -736,7 +756,8 @@ unsigned floatScale1d2(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned floatScale2(unsigned uf) {
+unsigned floatScale2(unsigned uf)
+{
   return 2;
 }
 /* 
@@ -750,7 +771,8 @@ unsigned floatScale2(unsigned uf) {
  *   Max ops: 35
  *   Rating: 4
  */
-unsigned floatScale64(unsigned uf) {
+unsigned floatScale64(unsigned uf)
+{
   return 2;
 }
 /* 
@@ -762,8 +784,9 @@ unsigned floatScale64(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned floatUnsigned2Float(unsigned u) {
-    return 2;
+unsigned floatUnsigned2Float(unsigned u)
+{
+  return 2;
 }
 /* 
  * getByte - Extract byte n from word x
@@ -773,7 +796,7 @@ unsigned floatUnsigned2Float(unsigned u) {
  *   Max ops: 6
  *   Rating: 2
  */
-int getByte(int x, int n) 
+int getByte(int x, int n)
 {
   int move = n << 3;
   return (x >> move) & 0xFF;
@@ -794,14 +817,14 @@ int getByte(int x, int n)
  */
 int greatestBitPos(int x)
 {
-    int mask = (1 << 31) + ~0;
-    x |= x >> 1;
-    x |= x >> 2;
-    x |= x >> 4;
-    x |= x >> 8;
-    x |= x >> 16;
+  int mask = (1 << 31) + ~0;
+  x |= x >> 1;
+  x |= x >> 2;
+  x |= x >> 4;
+  x |= x >> 8;
+  x |= x >> 16;
 
-    return x ^ ((x >> 1) & mask);
+  return x ^ ((x >> 1) & mask);
 }
 
 /* howManyBits - return the minimum number of bits required to represent x in
@@ -816,7 +839,8 @@ int greatestBitPos(int x)
  *  Max ops: 90
  *  Rating: 4
  */
-int howManyBits(int x) {
+int howManyBits(int x)
+{
   return 0;
 }
 /* 
@@ -828,8 +852,9 @@ int howManyBits(int x) {
  *   Max ops: 5
  *   Rating: 2
  */
-int implication(int x, int y) {
-    return 2;
+int implication(int x, int y)
+{
+  return (!x) | y;
 }
 /*
  * intLog2 - return floor(log base 2 of x), where x > 0
@@ -838,8 +863,24 @@ int implication(int x, int y) {
  *   Max ops: 90
  *   Rating: 4
  */
-int intLog2(int x) {
-  return 2;
+int intLog2(int x)
+{
+  int result = 0;
+  int b4 = !!(x >> 16);
+  int b3 = 0;
+  int b2 = 0;
+  int b1 = 0;
+  int b0 = 0;
+  result = b4 << 4;
+  b3 = !!(x >> (8 + result));
+  result = result | (b3 << 3);
+  b2 = !!(x >> (4 + result));
+  result = result | (b2 << 2);
+  b1 = !!(x >> (2 + result));
+  result = result | (b1 << 1);
+  b0 = !!(x >> (1 + result));
+  result = result | b0;
+  return result;
 }
 /* 
  * isAsciiDigit - return 1 if 0x30 <= x <= 0x39 (ASCII codes for characters '0' to '9')
@@ -850,8 +891,12 @@ int intLog2(int x) {
  *   Max ops: 15
  *   Rating: 3
  */
-int isAsciiDigit(int x) {
-  return 2;
+int isAsciiDigit(int x)
+{
+  x = ~x;
+  //0x3a+x，符号位为0；0x30+x，符号位为1
+  //return !(((0x3a+x)+~(0x30+x))>>31);
+  return !(((0x3a + x) >> 31) + ~((0x30 + x) >> 31));
 }
 /* 
  * isEqual - return 1 if x == y, and 0 otherwise 
@@ -860,7 +905,8 @@ int isAsciiDigit(int x) {
  *   Max ops: 5
  *   Rating: 2
  */
-int isEqual(int x, int y) {
+int isEqual(int x, int y)
+{
   return !(x ^ y);
 }
 /* 
@@ -874,12 +920,12 @@ int isEqual(int x, int y) {
  */
 int isGreater(int x, int y)
 {
-    int ny = ~y;
-    int v1 = x & ny;
-    int v2 = x ^ ny;
-    int v3 = x + ny;
-    int v4 = (v2 & v3) | v1;
-    return !(v4 >> 31);
+  int ny = ~y;
+  int v1 = x & ny;
+  int v2 = x ^ ny;
+  int v3 = x + ny;
+  int v4 = (v2 & v3) | v1;
+  return !(v4 >> 31);
 }
 /* 
  * isLess - if x < y  then return 1, else return 0 
@@ -888,8 +934,15 @@ int isGreater(int x, int y)
  *   Max ops: 24
  *   Rating: 3
  */
-int isLess(int x, int y) {
-  return 2;
+int isLess(int x, int y)
+{
+  int mask = !!(x ^ y);
+  int ny = ~y;
+  int v1 = x & ny;
+  int v2 = x ^ ny;
+  int v3 = x + ny;
+  int v4 = (v2 & v3) | v1;
+  return (v4 >> 31) & 0x1 & mask;
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -898,13 +951,14 @@ int isLess(int x, int y) {
  *   Max ops: 24
  *   Rating: 3
  */
-int isLessOrEqual(int x, int y) {
-    int ny = ~y;
-    int v1 = x & ny;
-    int v2 = x ^ ny;
-    int v3 = x + ny;
-    int v4 = (v2 & v3) | v1;
-    return (v4 >> 31) & 0x1;
+int isLessOrEqual(int x, int y)
+{
+  int ny = ~y;
+  int v1 = x & ny;
+  int v2 = x ^ ny;
+  int v3 = x + ny;
+  int v4 = (v2 & v3) | v1;
+  return (v4 >> 31) & 0x1;
 }
 /* 
  * isNegative - return 1 if x < 0, return 0 otherwise 
@@ -913,7 +967,8 @@ int isLessOrEqual(int x, int y) {
  *   Max ops: 6
  *   Rating: 2
  */
-int isNegative(int x) {
+int isNegative(int x)
+{
   int sign = (x >> 31) & 0x1;
   return sign;
 }
@@ -924,7 +979,8 @@ int isNegative(int x) {
  *   Max ops: 6
  *   Rating: 2
  */
-int isNonNegative(int x) {
+int isNonNegative(int x)
+{
   int sign = (x >> 31) & 0x1;
   return !sign;
 }
@@ -936,8 +992,9 @@ int isNonNegative(int x) {
  *   Max ops: 10
  *   Rating: 4 
  */
-int isNonZero(int x) {
-  return 2;
+int isNonZero(int x)
+{
+  return ((x | (~x + 1)) >> 31) & 1;
 }
 /* 
  * isNotEqual - return 0 if x == y, and 1 otherwise 
@@ -946,7 +1003,8 @@ int isNonZero(int x) {
  *   Max ops: 6
  *   Rating: 2
  */
-int isNotEqual(int x, int y) {
+int isNotEqual(int x, int y)
+{
   return !!(x ^ y);
 }
 /*
@@ -956,27 +1014,28 @@ int isNotEqual(int x, int y) {
  *   Max ops: 45
  *   Rating: 4
  */
-int isPallindrome(int x) {
-    int s = x;
-    int mask = 0x55 | (0x55 << 8);
-    mask |= mask << 16;
-    x = ((x & mask) << 1) | ((x >> 1) & mask);
+int isPallindrome(int x)
+{
+  int s = x;
+  int mask = 0x55 | (0x55 << 8);
+  mask |= mask << 16;
+  x = ((x & mask) << 1) | ((x >> 1) & mask);
 
-    mask = 0x33 | (0x33 << 8);
-    mask |= mask << 16;
-    x = ((x & mask) << 2) | ((x >> 2) & mask);
+  mask = 0x33 | (0x33 << 8);
+  mask |= mask << 16;
+  x = ((x & mask) << 2) | ((x >> 2) & mask);
 
-    mask = 0x0F | (0x0F << 8);
-    mask |= mask << 16;
-    x = ((x & mask) << 4) | ((x >> 4) & mask);
+  mask = 0x0F | (0x0F << 8);
+  mask |= mask << 16;
+  x = ((x & mask) << 4) | ((x >> 4) & mask);
 
-    mask = 0xFF | (0xFF << 16);
-    x = ((x & mask) << 8) | ((x >> 8) & mask);
+  mask = 0xFF | (0xFF << 16);
+  x = ((x & mask) << 8) | ((x >> 8) & mask);
 
-    mask = 0xFF | (0xFF << 8);
-    x = ((x & mask) << 16) | ((x >> 16) & mask);
+  mask = 0xFF | (0xFF << 8);
+  x = ((x & mask) << 16) | ((x >> 16) & mask);
 
-    return !(x ^ s);
+  return !(x ^ s);
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -985,7 +1044,8 @@ int isPallindrome(int x) {
  *   Max ops: 8
  *   Rating: 2
  */
-int isPositive(int x) {
+int isPositive(int x)
+{
   int sign = (x >> 31) & 0x1;
   return !sign & !!x;
 }
@@ -1008,17 +1068,16 @@ int isPositive(int x) {
  */
 int isPower2(int x)
 {
-    int dup = x;
-    x |= x >> 1;
-    x |= x >> 2;
-    x |= x >> 4;
-    x |= x >> 8;
-    x |= x >> 16;
-    x >>= 1;
-    x += 1;
-    return !(x ^ dup);
+  int dup = x;
+  x |= x >> 1;
+  x |= x >> 2;
+  x |= x >> 4;
+  x |= x >> 8;
+  x |= x >> 16;
+  x >>= 1;
+  x += 1;
+  return !(x ^ dup);
 }
-
 
 /*
  * isTmax - returns 1 if x is the maximum, two's complement number,
@@ -1030,7 +1089,7 @@ int isPower2(int x)
  * x+1 = ~x 的有 0x7FFFFFFF, 0xFFFFFFFF
  * 结果屏蔽掉0xFFFFFFFF就可以了
  */
-int isTmax(int x) 
+int isTmax(int x)
 {
   return !((x + 1) ^ (~x)) & !!(x + 1);
 }
@@ -1045,9 +1104,9 @@ int isTmax(int x)
  * -x = ~x + 1 == x 的有，TMin与0
  * 如果表达式最后不加上 & !!x,TMin与0都返回1
  */
-int isTmin(int x) 
+int isTmin(int x)
 {
-  return !(x ^ (~x + 1))  & !!x;
+  return !(x ^ (~x + 1)) & !!x;
 }
 
 /*
@@ -1057,7 +1116,8 @@ int isTmin(int x)
  *   Max ops: 2
  *   Rating: 1
  */
-int isZero(int x) {
+int isZero(int x)
+{
   return !x;
 }
 /* 
@@ -1073,7 +1133,7 @@ int isZero(int x) {
  * x & (~x + 1) = 0000 0010
  * 
  */
-int leastBitPos(int x) 
+int leastBitPos(int x)
 {
   return x & (~x + 1);
 }
@@ -1085,8 +1145,32 @@ int leastBitPos(int x)
  *   Max ops: 50
  *   Rating: 4
  */
-int leftBitCount(int x) {
-  return 2;
+int leftBitCount(int x)
+{
+  int v = x;
+  int r; // store our result here
+  int shift;
+  int full = !(~x); // we must add one if we have 0xffffffff
+
+  // Check the top 16 bits and add them to our result if they exist
+  r = !(~(v >> 16)) << 4;
+  v <<= r;
+  // check the remaining 8 bits
+  shift = !(~(v >> 24)) << 3;
+  v <<= shift;
+  r |= shift;
+  // remaining 4 bits
+  shift = !(~(v >> 28)) << 2;
+  v <<= shift;
+  r |= shift;
+  // remaining 2 bits
+  shift = !(~(v >> 30)) << 1;
+  v <<= shift;
+  r |= shift;
+  // remaining 1 bits
+  r ^= 1 & ((v >> 31));
+
+  // remember to add one if we have 32 on bits
 }
 /* 
  * logicalNeg - implement the ! operator, using all of 
@@ -1099,11 +1183,12 @@ int leftBitCount(int x) {
  * 如果x不为0，那么LSB为1，否则为0
  * LSB ^ 0x1 = ~LSB
  */
-int logicalNeg(int x) {
+int logicalNeg(int x)
+{
   x |= x >> 1;
   x |= x >> 2;
   x |= x >> 4;
-  x |= x>> 8;
+  x |= x >> 8;
   x |= x >> 16;
 
   return (0x1 & x) ^ 0x1;
@@ -1122,10 +1207,10 @@ int logicalNeg(int x) {
  */
 int logicalShift(int x, int n)
 {
-    x >>= n;
-    int move = 32 + (~n + 1);
-    int mask = ((!!n & 0x1) << move) + ~0;
-    return x & mask;
+  x >>= n;
+  int move = 32 + (~n + 1);
+  int mask = ((!!n & 0x1) << move) + ~0;
+  return x & mask;
 }
 /* 
  * minusOne - return a value of -1 
@@ -1135,7 +1220,8 @@ int logicalShift(int x, int n)
  * 
  * -1 == ~0 = ~1 + 1 = 0xFFFFFFFF
  */
-int minusOne(void) {
+int minusOne(void)
+{
   return ~0;
 }
 
@@ -1150,7 +1236,8 @@ int minusOne(void) {
  *   Max ops: 12
  *   Rating: 3
  */
-int multFiveEighths(int x) {
+int multFiveEighths(int x)
+{
   return 2;
 }
 /* 
@@ -1160,7 +1247,8 @@ int multFiveEighths(int x) {
  *   Max ops: 5
  *   Rating: 2
  */
-int negate(int x) {
+int negate(int x)
+{
   return ~x + 1;
 }
 /* 
@@ -1169,7 +1257,8 @@ int negate(int x) {
  *   Max ops: 8
  *   Rating: 2
  */
-int oddBits(void) {
+int oddBits(void)
+{
   int x = 0xAA | (0xAA << 8);
   x |= x << 16;
 
@@ -1183,8 +1272,9 @@ int oddBits(void) {
  *   Max ops: 20
  *   Rating: 3
  */
-int remainderPower2(int x, int n) {
-    return 2;
+int remainderPower2(int x, int n)
+{
+  return 2;
 }
 /* 
  * replaceByte(x,n,c) - Replace byte n in x with c
@@ -1197,9 +1287,9 @@ int remainderPower2(int x, int n) {
  */
 int replaceByte(int x, int n, int c)
 {
-    int step = n << 3;
-    x ^= ((x >> step) & 0xFF) << step;
-    return x | (c << step);
+  int step = n << 3;
+  x ^= ((x >> step) & 0xFF) << step;
+  return x | (c << step);
 }
 /* 
  * rotateLeft - Rotate x to the left by n
@@ -1209,7 +1299,8 @@ int replaceByte(int x, int n, int c)
  *   Max ops: 25
  *   Rating: 3 
  */
-int rotateLeft(int x, int n) {
+int rotateLeft(int x, int n)
+{
   return 2;
 }
 /* 
@@ -1220,7 +1311,8 @@ int rotateLeft(int x, int n) {
  *   Max ops: 25
  *   Rating: 3 
  */
-int rotateRight(int x, int n) {
+int rotateRight(int x, int n)
+{
   return 2;
 }
 /*
@@ -1240,17 +1332,17 @@ int rotateRight(int x, int n) {
  */
 int satAdd(int x, int y)
 {
-    int s = x + y;
+  int s = x + y;
 
-    int neg_overflow = ((x & y & ~s) >> 31) & 0x1;
-    int pos_overflow = ((~x & ~y & s) >> 31) & 0x1;
-    int no_overflow = !(neg_overflow | pos_overflow);
+  int neg_overflow = ((x & y & ~s) >> 31) & 0x1;
+  int pos_overflow = ((~x & ~y & s) >> 31) & 0x1;
+  int no_overflow = !(neg_overflow | pos_overflow);
 
-    int neg_overflow_mask = neg_overflow << 31;
-    int pos_overflow_mask = (pos_overflow << 31) + ~0 + !pos_overflow;
-    int no_overflow_mask = (~no_overflow + 1);
+  int neg_overflow_mask = neg_overflow << 31;
+  int pos_overflow_mask = (pos_overflow << 31) + ~0 + !pos_overflow;
+  int no_overflow_mask = (~no_overflow + 1);
 
-    return (neg_overflow_mask | pos_overflow_mask | no_overflow_mask) & (s | (~0 + no_overflow));
+  return (neg_overflow_mask | pos_overflow_mask | no_overflow_mask) & (s | (~0 + no_overflow));
 }
 
 /*
@@ -1262,7 +1354,8 @@ int satAdd(int x, int y)
  *   Max ops: 20
  *   Rating: 3
  */
-int satMul2(int x) {
+int satMul2(int x)
+{
   return 2;
 }
 /*
@@ -1276,8 +1369,9 @@ int satMul2(int x) {
  *  Max ops: 25
  *  Rating: 3
  */
-int satMul3(int x) {
-    return 2;
+int satMul3(int x)
+{
+  return 2;
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
@@ -1302,10 +1396,10 @@ int satMul3(int x) {
  */
 int sign(int x)
 {
-    int mask = ~0;
-    int s = (x >> 31) & 0x1;
+  int mask = ~0;
+  int s = (x >> 31) & 0x1;
 
-    return mask + !s + !(s ^ !x);
+  return mask + !s + !(s ^ !x);
 }
 
 /* 
@@ -1324,10 +1418,10 @@ int sign(int x)
  */
 int signMag2TwosComp(int x)
 {
-    int mask = ~0;
-    int sign = (x >> 31) & 0x1;
-    x = x & ((1 << 31) + ~0);   // 符号位置为0
-    return (x ^ (mask + !sign)) + sign;
+  int mask = ~0;
+  int sign = (x >> 31) & 0x1;
+  x = x & ((1 << 31) + ~0); // 符号位置为0
+  return (x ^ (mask + !sign)) + sign;
 }
 
 /* 
@@ -1343,8 +1437,8 @@ int signMag2TwosComp(int x)
  */
 int specialBits(void)
 {
-    int x = 0xD7 << 14;
-    return ~x;
+  int x = 0xD7 << 14;
+  return ~x;
 }
 /* 
  * subtractionOK - Determine if can compute x-y without overflow
@@ -1360,13 +1454,13 @@ int specialBits(void)
  */
 int subtractionOK(int x, int y)
 {
-    int negativeY = ~y + 1;
-    int s = x + (~y + 1);
+  int negativeY = ~y + 1;
+  int s = x + (~y + 1);
 
-    int xy = x ^ y;
-    int xs = x ^ s;
+  int xy = x ^ y;
+  int xs = x ^ s;
 
-    return !(((xy & xs) >> 31) & 0x1);
+  return !(((xy & xs) >> 31) & 0x1);
 }
 
 /* 
@@ -1377,9 +1471,9 @@ int subtractionOK(int x, int y)
  */
 int thirdBits(void)
 {
-    int r = 0x49 | (0x49 << 9);
-    r |= r << 18;
-    return r;
+  int r = 0x49 | (0x49 << 9);
+  r |= r << 18;
+  return r;
 }
 
 /* 
@@ -1388,7 +1482,8 @@ int thirdBits(void)
  *   Max ops: 4
  *   Rating: 1
  */
-int tmax(void) {
+int tmax(void)
+{
   return (1 << 31) + ~0;
 }
 /* 
@@ -1397,7 +1492,8 @@ int tmax(void) {
  *   Max ops: 4
  *   Rating: 1
  */
-int tmin(void) {
+int tmin(void)
+{
   return 1 << 31;
 }
 /*
@@ -1412,7 +1508,7 @@ int tmin(void) {
  */
 int trueFiveEighths(int x)
 {
-    return 2;
+  return 2;
 }
 /*
  * trueThreeFourths - multiplies by 3/4 rounding toward 0,
@@ -1437,7 +1533,8 @@ int trueThreeFourths(int x)
  *   Max ops: 15
  *   Rating: 4
  */
-int twosComp2SignMag(int x) {
+int twosComp2SignMag(int x)
+{
   return 2;
 }
 /* 
@@ -1448,6 +1545,7 @@ int twosComp2SignMag(int x) {
  *  Max ops: 10
  *  Rating: 1
  */
-int upperBits(int n) {
+int upperBits(int n)
+{
   return 2;
 }
