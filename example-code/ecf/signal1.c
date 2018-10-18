@@ -2,7 +2,7 @@
 /* $begin signal1 */
 /* WARNING: This code is buggy! */
 
-void handler1(int sig) 
+void handler1(int sig)
 {
     int olderrno = errno;
 
@@ -13,7 +13,7 @@ void handler1(int sig)
     errno = olderrno;
 }
 
-int main() 
+int main()
 {
     int i, n;
     char buf[MAXBUF];
@@ -22,8 +22,10 @@ int main()
         unix_error("signal error");
 
     /* Parent creates children */
-    for (i = 0; i < 3; i++) {
-        if (Fork() == 0) {
+    for (i = 0; i < 3; i++)
+    {
+        if (Fork() == 0)
+        {
             printf("Hello from child %d\n", (int)getpid());
             exit(0);
         }

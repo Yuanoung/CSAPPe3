@@ -1,18 +1,26 @@
 /* $begin myecho */
 #include "csapp.h"
 
-int main(int argc, char *argv[], char *envp[]) 
+int main(int argc, char **argv, char **envp)
 {
-    int i;
+    // int i;
+    // printf("Command-line arguments:\n");
+    // for (i = 0; argv[i] != NULL; i++)
+    //     printf("    argv[%2d]: %s\n", i, argv[i]);
 
-    printf("Command-line arguments:\n");
-    for (i=0; argv[i] != NULL; i++)
-	printf("    argv[%2d]: %s\n", i, argv[i]);
+    // printf("\n");
+    // printf("Environment variables:\n");
+    // for (i = 0; envp[i] != NULL; i++)
+    //     printf("    envp[%2d]: %s\n", i, envp[i]);
+
+    while (*argv)
+        printf("%s\n", *argv++);
 
     printf("\n");
-    printf("Environment variables:\n");
-    for (i=0; envp[i] != NULL; i++)
-	printf("    envp[%2d]: %s\n", i, envp[i]);
+    while (*envp)
+        printf("%s\n", *envp++);
+
+    printf("%s\n", getenv("CLASSPATH"));
 
     exit(0);
 }
