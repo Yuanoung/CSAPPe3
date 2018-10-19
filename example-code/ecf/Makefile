@@ -43,6 +43,7 @@ PROGS = fragments.o\
 	waitpid1\
 	waitpid2\
 	myecho\
+	myls\
 	stack\
 	sigfpe\
 	sigbus\
@@ -50,6 +51,7 @@ PROGS = fragments.o\
 	forkprob0\
 	signalprob0\
 	snooze\
+	shell\
 	test\
 	pg\
 	pgchild\

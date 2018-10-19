@@ -3,23 +3,25 @@
 
 sigjmp_buf buf;
 
-void handler(int sig) 
+void handler(int sig)
 {
     siglongjmp(buf, 1);
 }
 
-int main() 
+int main()
 {
-    if (!sigsetjmp(buf, 1)) {
+    if (!sigsetjmp(buf, 2))
+    {
         Signal(SIGINT, handler);
-	Sio_puts("starting\n");
+        Sio_puts("starting\n");
     }
-    else 
-	Sio_puts("restarting\n");
+    else
+        Sio_puts("restarting\n");
 
-    while(1) {
-	Sleep(1);
-	Sio_puts("processing...\n");
+    while (1)
+    {
+        Sleep(1);
+        Sio_puts("processing...\n");
     }
     exit(0); /* Control never reaches here */
 }
