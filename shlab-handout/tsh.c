@@ -73,6 +73,7 @@ void initjobs(struct job_t *jobs);
 int maxjid(struct job_t *jobs);
 int addjob(struct job_t *jobs, pid_t pid, int state, char *cmdline);
 int deletejob(struct job_t *jobs, pid_t pid);
+int updatejob(struct job_t *jobs, pid_t pid, int state);
 pid_t fgpid(struct job_t *jobs);
 struct job_t *getjobpid(struct job_t *jobs, pid_t pid);
 struct job_t *getjobjid(struct job_t *jobs, int jid);
@@ -140,6 +141,11 @@ int main(int argc, char **argv)
             printf("%s", prompt);
             fflush(stdout);
         }
+        /* 
+         * 每个流在FIFE对象中维护了两个标志：
+         * 1): 出错标志；           ferror返回真
+         * 2): 文件结束标志。        feof返回真
+         */
         if ((fgets(cmdline, MAXLINE, stdin) == NULL) && ferror(stdin))
             app_error("fgets error");
         if (feof(stdin))
@@ -170,6 +176,44 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
+    char *argv[MAXARGS];
+    int bg;
+    pid_t pid;
+
+    bg = parseline(cmdline, argv);
+    if (argv[0] == NULL)
+        return; /* 忽略空行 */
+
+    if (!strcmp(argv[0], "quit"))
+        exit(0);
+
+    if (!builtin_cmd(argv))
+    {
+        if ((pid = fork()) == 0)
+        {
+            if (bg)
+            {
+                Signal(SIGINT, SIG_IGN);
+                Signal(SIGTSTP, SIG_IGN);
+            }
+
+            if (execve(argv[0], argv, environ) < 0)
+            {
+                printf("%s: Command not found.\n", argv[0]);
+                fflush(stdout);
+                exit(0);
+            }
+        }
+
+        addjob(jobs, pid, (bg == 1 ? BG : FG), cmdline);
+        if (!bg)
+        {
+            waitfg(pid);
+        }
+
+        else
+            printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
+    }
     return;
 }
 
@@ -242,6 +286,26 @@ int parseline(const char *cmdline, char **argv)
  */
 int builtin_cmd(char **argv)
 {
+    char *cmd = argv[0];
+
+    if (!strcmp(cmd, "jobs"))
+    {
+        listjobs(jobs);
+        return 1;
+    }
+
+    if (!strcmp(cmd, "bg") || !strcmp(cmd, "fg"))
+    {
+        if (argv[1] == NULL)
+            printf("%s command needs PID argument\n", cmd);
+        else
+            do_bgfg(argv);
+        return 1;
+    }
+
+    if (!strcmp(argv[0], "&"))
+        return 1;
+
     return 0; /* not a builtin command */
 }
 
@@ -250,6 +314,27 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv)
 {
+    int pid;
+    struct job_t *jobp;
+    char *cmd = argv[0];
+
+    pid = atoi(argv[1]);
+
+    if ((jobp = getjobpid(jobs, pid)) != NULL)
+    {
+        if (!strcmp(cmd, "bg")) /* 针对已停止运行（非终止的）子进程 */
+        {
+            kill(pid, SIGCONT);
+            updatejob(jobs, pid, BG);
+        }
+        if (!strcmp(cmd, "fg"))
+        {
+            kill(pid, SIGCONT);
+            updatejob(jobs, pid, FG);
+            waitfg(pid); // 前台运行，需要等待该子进程停止或在终止
+        }
+    }
+
     return;
 }
 
@@ -258,6 +343,24 @@ void do_bgfg(char **argv)
  */
 void waitfg(pid_t pid)
 {
+    int status;
+
+    if (waitpid(pid, &status, WUNTRACED) < 0)
+        unix_error("waitfg: waitpid error");
+
+    if (WIFSTOPPED(status))
+    {
+        sprintf(sbuf, "Job %d stopped by signal", pid);
+        psignal(WEXITSTATUS(status), sbuf);
+        updatejob(jobs, pid, ST);
+    }
+
+    else
+    {
+        deletejob(jobs, pid);
+        if (verbose)
+            printf("waitfg: job %d deleted\n", pid);
+    }
     return;
 }
 
@@ -274,6 +377,34 @@ void waitfg(pid_t pid)
  */
 void sigchld_handler(int sig)
 {
+    pid_t pid;
+    int status;
+
+    if (verbose)
+        printf("sigchld_handler: entering \n");
+
+    /*
+     * 如果出错，返回-1
+     * 如果没有任何子进程终止（不包括停止），返回0
+     * 如果成功，返回子进程的pid
+     */
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
+    {
+        deletejob(jobs, pid);
+        if (verbose)
+            printf("sigchld_handler: job %d deleted\n", pid);
+    }
+
+    /*
+     * 如果调用进程没有子进程，那么waitpid返回-1，并且设置errno为ECHILD。
+     * 如果waitpid函数被一个信号中断，那么它返回-1，并设置errno为EINTR。
+     */
+    if (!((pid == 0) || (pid == -1 && errno == ECHILD)))
+        unix_error("sigchld_handler wait error");
+
+    if (verbose)
+        printf("sigchld_handler: exiting\n");
+
     return;
 }
 
@@ -284,6 +415,9 @@ void sigchld_handler(int sig)
  */
 void sigint_handler(int sig)
 {
+    if (verbose)
+        printf("sigint_handler: shell caught SIGINT.");
+
     return;
 }
 
@@ -294,6 +428,9 @@ void sigint_handler(int sig)
  */
 void sigtstp_handler(int sig)
 {
+    if (verbose)
+        printf("sigtstp_handler: shell caught SIGTSTP.");
+
     return;
 }
 
@@ -380,6 +517,24 @@ int deletejob(struct job_t *jobs, pid_t pid)
             return 1;
         }
     }
+    return 0;
+}
+
+int updatejob(struct job_t *jobs, pid_t pid, int state)
+{
+    int i;
+
+    for (i = 0; i < MAXJOBS; i++)
+    {
+        if (jobs[i].pid == pid)
+        {
+            jobs[i].state = state;
+            printf("[%d] (%d) %s \n", jobs[i].jid, jobs[i].pid, jobs[i].cmdline);
+            return 1;
+        }
+    }
+
+    printf("Job %d not found\n", pid);
     return 0;
 }
 
