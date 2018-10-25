@@ -136,7 +136,7 @@ int parse_uri(char *uri, char *filename, char *cgiargs)
         if (uri[strlen(uri) - 1] == '/')   //line:netp:parseuri:slashcheck
             strcat(filename, "home.html"); //line:netp:parseuri:appenddefault
         return 1;
-    }
+    } 
     else
     { /* Dynamic content */    //line:netp:parseuri:isdynamic
         ptr = index(uri, '?'); //line:netp:parseuri:beginextract
