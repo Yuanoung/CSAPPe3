@@ -4,9 +4,10 @@
 long fact_do(long n)
 {
     long result = 1;
-    do {
-	result *= n;
-	n = n-1;
+    do
+    {
+        result *= n;
+        n = n - 1;
     } while (n > 1);
     return result;
 }
@@ -16,9 +17,10 @@ long fact_do(long n)
 long fact_while(long n)
 {
     long result = 1;
-    while (n > 1) {
-	result *= n;
-	n = n-1;
+    while (n > 1)
+    {
+        result *= n;
+        n = n - 1;
     }
     return result;
 }
@@ -30,7 +32,7 @@ long fact_for(long n)
     long i;
     long result = 1;
     for (i = 2; i <= n; i++)
-	result *= i;
+        result *= i;
     return result;
 }
 /* $end 160-fact_for-c */
@@ -40,9 +42,10 @@ long fact_for_while(long n)
 {
     long i = 2;
     long result = 1;
-    while (i <= n) {
-	result *= i;
-	i++;
+    while (i <= n)
+    {
+        result *= i;
+        i++;
     }
     return result;
 }
@@ -52,11 +55,11 @@ long fact_for_while(long n)
 long fact_do_goto(long n)
 {
     long result = 1;
- loop: 
+loop:
     result *= n;
-    n = n-1;
+    n = n - 1;
     if (n > 1)
-	goto loop;
+        goto loop;
     return result;
 }
 /* $end 160-fact_do_goto-c */
@@ -66,12 +69,12 @@ long fact_while_jm_goto(long n)
 {
     long result = 1;
     goto test;
- loop:
+loop:
     result *= n;
-    n = n-1;
- test:
+    n = n - 1;
+test:
     if (n > 1)
-	goto loop;
+        goto loop;
     return result;
 }
 /* $end 160-fact_while_jm_goto-c */
@@ -81,17 +84,16 @@ long fact_while_gd_goto(long n)
 {
     long result = 1;
     if (n <= 1)
-	goto done;
- loop:
+        goto done;
+loop:
     result *= n;
-    n = n-1;
+    n = n - 1;
     if (n != 1)
-	goto loop;
- done:
+        goto loop;
+done:
     return result;
 }
 /* $end 160-fact_while_gd_goto-c */
-
 
 /* $begin 160-fact_for_jm_goto-c */
 long fact_for_jm_goto(long n)
@@ -99,12 +101,12 @@ long fact_for_jm_goto(long n)
     long i = 2;
     long result = 1;
     goto test;
- loop:
+loop:
     result *= i;
     i++;
- test:
+test:
     if (i <= n)
-	goto loop;
+        goto loop;
     return result;
 }
 /* $end 160-fact_for_jm_goto-c */
@@ -115,13 +117,13 @@ long fact_for_gd_goto(long n)
     long i = 2;
     long result = 1;
     if (n <= 1)
-	goto done;
- loop:
+        goto done;
+loop:
     result *= i;
     i++;
     if (i <= n)
-	goto loop;
- done:
+        goto loop;
+done:
     return result;
 }
 /* $end 160-fact_for_gd_goto-c */
@@ -131,9 +133,9 @@ long rfact(long n)
 {
     long result;
     if (n <= 1)
-	result = 1;
+        result = 1;
     else
-        result = n * rfact(n-1);
+        result = n * rfact(n - 1);
     return result;
 }
 /* $end 160-rfact-c */
