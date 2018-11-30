@@ -18,5 +18,5 @@ multstore:
 	.cfi_endproc
 .LFE0:
 	.size	multstore, .-multstore
-	.ident	"GCC: (Ubuntu 4.8.1-2ubuntu1~12.04) 4.8.1"
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
 	.section	.note.GNU-stack,"",@progbits

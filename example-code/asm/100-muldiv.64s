@@ -1,0 +1,52 @@
+	.file	"100-muldiv.c"
+	.text
+	.globl	store_uprod
+	.type	store_uprod, @function
+store_uprod:
+	movq	%rsi, %rax
+	mulq	%rdx
+	movq	%rax, (%rdi)
+	movq	%rdx, 8(%rdi)
+	ret
+	.size	store_uprod, .-store_uprod
+	.globl	store_prod
+	.type	store_prod, @function
+store_prod:
+	movq	%rsi, %rax
+	movq	%rdx, %rsi
+	movq	%rdx, %rcx
+	sarq	$63, %rcx
+	cqto
+	imulq	%rsi, %rdx
+	imulq	%rax, %rcx
+	addq	%rdx, %rcx
+	mulq	%rsi
+	addq	%rcx, %rdx
+	movq	%rax, (%rdi)
+	movq	%rdx, 8(%rdi)
+	ret
+	.size	store_prod, .-store_prod
+	.globl	remdiv
+	.type	remdiv, @function
+remdiv:
+	movq	%rdi, %rax
+	movq	%rdx, %rdi
+	cqto
+	idivq	%rsi
+	movq	%rax, (%rdi)
+	movq	%rdx, (%rcx)
+	ret
+	.size	remdiv, .-remdiv
+	.globl	uremdiv
+	.type	uremdiv, @function
+uremdiv:
+	movq	%rdi, %rax
+	movq	%rdx, %rdi
+	movl	$0, %edx
+	divq	%rsi
+	movq	%rax, (%rdi)
+	movq	%rdx, (%rcx)
+	ret
+	.size	uremdiv, .-uremdiv
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

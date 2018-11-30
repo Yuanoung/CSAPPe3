@@ -1,0 +1,57 @@
+	.file	"w110-procreg.c"
+	.text
+	.globl	proc
+	.type	proc, @function
+proc:
+	pushl	%ebp
+	movl	%esp, %ebp
+	pushl	%ebx
+	movl	12(%ebp), %ecx
+	movl	20(%ebp), %edx
+	movl	28(%ebp), %eax
+	movl	8(%ebp), %ebx
+	addl	%ebx, (%ecx)
+	movl	16(%ebp), %ecx
+	addw	%cx, (%edx)
+	movl	24(%ebp), %edx
+	addb	%dl, (%eax)
+	popl	%ebx
+	popl	%ebp
+	ret
+	.size	proc, .-proc
+	.globl	call_proc
+	.type	call_proc, @function
+call_proc:
+	pushl	%ebp
+	movl	%esp, %ebp
+	subl	$24, %esp
+	movl	%gs:20, %eax
+	movl	%eax, -12(%ebp)
+	xorl	%eax, %eax
+	movl	$2, -16(%ebp)
+	movw	$3, -18(%ebp)
+	movb	$4, -19(%ebp)
+	leal	-19(%ebp), %eax
+	pushl	%eax
+	pushl	$4
+	leal	-18(%ebp), %eax
+	pushl	%eax
+	pushl	$3
+	leal	-16(%ebp), %eax
+	pushl	%eax
+	pushl	$2
+	call	proc
+	movswl	-18(%ebp), %eax
+	movsbl	-19(%ebp), %edx
+	subl	%edx, %eax
+	imull	-16(%ebp), %eax
+	movl	-12(%ebp), %ecx
+	xorl	%gs:20, %ecx
+	je	.L4
+	call	__stack_chk_fail
+.L4:
+	leave
+	ret
+	.size	call_proc, .-call_proc
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

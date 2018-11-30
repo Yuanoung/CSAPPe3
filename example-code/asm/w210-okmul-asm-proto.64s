@@ -1,0 +1,46 @@
+	.file	"w210-okmul-asm-proto.c"
+	.text
+	.globl	tmult_ok_asm
+	.type	tmult_ok_asm, @function
+tmult_ok_asm:
+	imulq	%rdi, %rsi
+	movq	%rsi, (%rdx)
+	testq	%rsi, %rsi
+	setg	%al
+	movzbl	%al, %eax
+	ret
+	.size	tmult_ok_asm, .-tmult_ok_asm
+	.globl	umult_ok_asm
+	.type	umult_ok_asm, @function
+umult_ok_asm:
+	imulq	%rdi, %rsi
+	movq	%rsi, (%rdx)
+	testq	%rsi, %rsi
+	setne	%al
+	movzbl	%al, %eax
+	ret
+	.size	umult_ok_asm, .-umult_ok_asm
+	.globl	tmult_sat
+	.type	tmult_sat, @function
+tmult_sat:
+	movq	%rdi, %rax
+	notq	%rax
+	shrq	$63, %rax
+	movq	%rsi, %rdx
+	shrq	$63, %rdx
+	cmpb	%dl, %al
+	je	.L6
+	movabsq	$9223372036854775807, %rax
+	jmp	.L4
+.L6:
+	movabsq	$-9223372036854775808, %rax
+.L4:
+	imulq	%rdi, %rsi
+	testq	%rsi, %rsi
+	jne	.L5
+	movq	%rsi, %rax
+.L5:
+	rep ret
+	.size	tmult_sat, .-tmult_sat
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

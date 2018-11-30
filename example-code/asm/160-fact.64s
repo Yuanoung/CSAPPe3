@@ -1,0 +1,147 @@
+	.file	"160-fact.c"
+	.text
+	.globl	fact_do
+	.type	fact_do, @function
+fact_do:
+	movl	$1, %eax
+.L2:
+	imulq	%rdi, %rax
+	subq	$1, %rdi
+	cmpq	$1, %rdi
+	jg	.L2
+	rep ret
+	.size	fact_do, .-fact_do
+	.globl	fact_while
+	.type	fact_while, @function
+fact_while:
+	movl	$1, %eax
+	jmp	.L4
+.L5:
+	imulq	%rdi, %rax
+	subq	$1, %rdi
+.L4:
+	cmpq	$1, %rdi
+	jg	.L5
+	rep ret
+	.size	fact_while, .-fact_while
+	.globl	fact_for
+	.type	fact_for, @function
+fact_for:
+	movl	$1, %eax
+	movl	$2, %edx
+	jmp	.L7
+.L8:
+	imulq	%rdx, %rax
+	addq	$1, %rdx
+.L7:
+	cmpq	%rdi, %rdx
+	jle	.L8
+	rep ret
+	.size	fact_for, .-fact_for
+	.globl	fact_for_while
+	.type	fact_for_while, @function
+fact_for_while:
+	movl	$1, %eax
+	movl	$2, %edx
+	jmp	.L10
+.L11:
+	imulq	%rdx, %rax
+	addq	$1, %rdx
+.L10:
+	cmpq	%rdi, %rdx
+	jle	.L11
+	rep ret
+	.size	fact_for_while, .-fact_for_while
+	.globl	fact_do_goto
+	.type	fact_do_goto, @function
+fact_do_goto:
+	movl	$1, %eax
+.L13:
+	imulq	%rdi, %rax
+	subq	$1, %rdi
+	cmpq	$1, %rdi
+	jg	.L13
+	rep ret
+	.size	fact_do_goto, .-fact_do_goto
+	.globl	fact_while_jm_goto
+	.type	fact_while_jm_goto, @function
+fact_while_jm_goto:
+	movl	$1, %eax
+	jmp	.L15
+.L16:
+	imulq	%rdi, %rax
+	subq	$1, %rdi
+.L15:
+	cmpq	$1, %rdi
+	jg	.L16
+	rep ret
+	.size	fact_while_jm_goto, .-fact_while_jm_goto
+	.globl	fact_while_gd_goto
+	.type	fact_while_gd_goto, @function
+fact_while_gd_goto:
+	cmpq	$1, %rdi
+	jle	.L20
+	movl	$1, %eax
+.L19:
+	imulq	%rdi, %rax
+	subq	$1, %rdi
+	cmpq	$1, %rdi
+	jne	.L19
+	rep ret
+.L20:
+	movl	$1, %eax
+.L18:
+	ret
+	.size	fact_while_gd_goto, .-fact_while_gd_goto
+	.globl	fact_for_jm_goto
+	.type	fact_for_jm_goto, @function
+fact_for_jm_goto:
+	movl	$1, %eax
+	movl	$2, %edx
+	jmp	.L22
+.L23:
+	imulq	%rdx, %rax
+	addq	$1, %rdx
+.L22:
+	cmpq	%rdi, %rdx
+	jle	.L23
+	rep ret
+	.size	fact_for_jm_goto, .-fact_for_jm_goto
+	.globl	fact_for_gd_goto
+	.type	fact_for_gd_goto, @function
+fact_for_gd_goto:
+	cmpq	$1, %rdi
+	jle	.L27
+	movl	$1, %eax
+	movl	$2, %edx
+.L26:
+	imulq	%rdx, %rax
+	addq	$1, %rdx
+	cmpq	%rdx, %rdi
+	jge	.L26
+	rep ret
+.L27:
+	movl	$1, %eax
+.L25:
+	ret
+	.size	fact_for_gd_goto, .-fact_for_gd_goto
+	.globl	rfact
+	.type	rfact, @function
+rfact:
+	cmpq	$1, %rdi
+	jle	.L30
+	pushq	%rbx
+	movq	%rdi, %rbx
+	leaq	-1(%rdi), %rdi
+	call	rfact
+	imulq	%rbx, %rax
+	jmp	.L29
+.L30:
+	movl	$1, %eax
+	ret
+.L29:
+	popq	%rbx
+	ret
+	.size	rfact, .-rfact
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

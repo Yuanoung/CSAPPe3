@@ -1,0 +1,18 @@
+	.file	"170-dw.c"
+	.text
+	.globl	dw_loop
+	.type	dw_loop, @function
+dw_loop:
+	movq	%rdi, %rax
+	movq	%rdi, %rcx
+	imulq	%rdi, %rcx
+	leaq	(%rdi,%rdi), %rdx
+.L2:
+	leaq	1(%rcx,%rax), %rax
+	subq	$1, %rdx
+	testq	%rdx, %rdx
+	jg	.L2
+	rep ret
+	.size	dw_loop, .-dw_loop
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

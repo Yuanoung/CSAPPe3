@@ -3,16 +3,17 @@
 	.globl	len
 	.type	len, @function
 len:
-.LFB56:
+.LFB60:
 	.cfi_startproc
 	movl	$0, %eax
 	movq	$-1, %rcx
-	repnz; scasb
-	notq	%rcx
-	leaq	-1(%rcx), %rax
+	repnz scasb
+	movq	%rcx, %rax
+	notq	%rax
+	subq	$1, %rax
 	ret
 	.cfi_endproc
-.LFE56:
+.LFE60:
 	.size	len, .-len
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
@@ -21,7 +22,7 @@ len:
 	.globl	iptoa
 	.type	iptoa, @function
 iptoa:
-.LFB57:
+.LFB61:
 	.cfi_startproc
 	subq	$8, %rsp
 	.cfi_def_cfa_offset 16
@@ -35,12 +36,12 @@ iptoa:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE57:
+.LFE61:
 	.size	iptoa, .-iptoa
 	.globl	intlen
 	.type	intlen, @function
 intlen:
-.LFB58:
+.LFB62:
 	.cfi_startproc
 	subq	$40, %rsp
 	.cfi_def_cfa_offset 48
@@ -54,7 +55,7 @@ intlen:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE58:
+.LFE62:
 	.size	intlen, .-intlen
 	.section	.rodata.str1.1
 .LC1:
@@ -63,7 +64,7 @@ intlen:
 	.globl	itoa
 	.type	itoa, @function
 itoa:
-.LFB59:
+.LFB63:
 	.cfi_startproc
 	subq	$8, %rsp
 	.cfi_def_cfa_offset 16
@@ -77,22 +78,22 @@ itoa:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE59:
+.LFE63:
 	.size	itoa, .-itoa
 	.globl	storeint
 	.type	storeint, @function
 storeint:
-.LFB60:
+.LFB64:
 	.cfi_startproc
 	movl	%edi, (%rsi)
 	ret
 	.cfi_endproc
-.LFE60:
+.LFE64:
 	.size	storeint, .-storeint
 	.globl	intlen2
 	.type	intlen2, @function
 intlen2:
-.LFB61:
+.LFB65:
 	.cfi_startproc
 	subq	$24, %rsp
 	.cfi_def_cfa_offset 32
@@ -107,7 +108,7 @@ intlen2:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE61:
+.LFE65:
 	.size	intlen2, .-intlen2
-	.ident	"GCC: (Ubuntu 4.8.1-2ubuntu1~12.04) 4.8.1"
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
 	.section	.note.GNU-stack,"",@progbits

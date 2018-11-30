@@ -3,7 +3,7 @@
 	.globl	gets
 	.type	gets, @function
 gets:
-.LFB34:
+.LFB38:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -47,12 +47,12 @@ gets:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE34:
+.LFE38:
 	.size	gets, .-gets
 	.globl	echo
 	.type	echo, @function
 echo:
-.LFB35:
+.LFB39:
 	.cfi_startproc
 	subq	$24, %rsp
 	.cfi_def_cfa_offset 32
@@ -64,12 +64,12 @@ echo:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE35:
+.LFE39:
 	.size	echo, .-echo
 	.globl	good_echo
 	.type	good_echo, @function
 good_echo:
-.LFB36:
+.LFB40:
 	.cfi_startproc
 	subq	$24, %rsp
 	.cfi_def_cfa_offset 32
@@ -86,7 +86,7 @@ good_echo:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE36:
+.LFE40:
 	.size	good_echo, .-good_echo
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
@@ -95,7 +95,7 @@ good_echo:
 	.globl	main
 	.type	main, @function
 main:
-.LFB37:
+.LFB41:
 	.cfi_startproc
 	pushq	%rbx
 	.cfi_def_cfa_offset 16
@@ -119,7 +119,7 @@ main:
 	.cfi_def_cfa_offset 8
 	ret
 	.cfi_endproc
-.LFE37:
+.LFE41:
 	.size	main, .-main
-	.ident	"GCC: (Ubuntu 4.8.1-2ubuntu1~12.04) 4.8.1"
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
 	.section	.note.GNU-stack,"",@progbits

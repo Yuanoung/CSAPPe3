@@ -1,0 +1,15 @@
+	.file	"010-mstore.c"
+	.intel_syntax noprefix
+	.text
+	.globl	multstore
+	.type	multstore, @function
+multstore:
+	push	rbx
+	mov	rbx, rdx
+	call	mult2
+	mov	QWORD PTR [rbx], rax
+	pop	rbx
+	ret
+	.size	multstore, .-multstore
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

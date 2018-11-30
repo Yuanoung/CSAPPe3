@@ -1,0 +1,22 @@
+	.file	"340-recurse.c"
+	.text
+	.globl	rfun
+	.type	rfun, @function
+rfun:
+	testq	%rdi, %rdi
+	je	.L3
+	pushq	%rbx
+	movq	%rdi, %rbx
+	shrq	$2, %rdi
+	call	rfun
+	addq	%rbx, %rax
+	jmp	.L2
+.L3:
+	movl	$0, %eax
+	ret
+.L2:
+	popq	%rbx
+	ret
+	.size	rfun, .-rfun
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

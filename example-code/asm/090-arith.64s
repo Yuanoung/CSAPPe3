@@ -1,0 +1,25 @@
+	.file	"090-arith.c"
+	.text
+	.globl	arith
+	.type	arith, @function
+arith:
+	xorq	%rdi, %rsi
+	leaq	(%rdx,%rdx,2), %rdx
+	movq	%rdx, %rax
+	salq	$4, %rax
+	andl	$252645135, %esi
+	subq	%rsi, %rax
+	ret
+	.size	arith, .-arith
+	.globl	arith2
+	.type	arith2, @function
+arith2:
+	orq	%rdi, %rsi
+	sarq	$3, %rsi
+	notq	%rsi
+	movq	%rdx, %rax
+	subq	%rsi, %rax
+	ret
+	.size	arith2, .-arith2
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits

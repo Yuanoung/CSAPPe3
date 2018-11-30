@@ -1,0 +1,34 @@
+	.file	"420-node.c"
+	.text
+	.globl	dothings
+	.type	dothings, @function
+dothings:
+	pushq	%rbp
+	pushq	%rbx
+	subq	$8, %rsp
+	movl	$32, %edi
+	call	malloc
+	movq	%rax, %rbx
+	movl	$16, %edi
+	call	malloc
+	movq	%rax, %rbp
+	movl	$24, %edi
+	call	malloc
+	vmovsd	24(%rbx), %xmm0
+	vmovsd	%xmm0, 16(%rbx)
+	movq	$0, 0(%rbp)
+	movl	$1, (%rax)
+	vmovsd	.LC1(%rip), %xmm1
+	vmovsd	%xmm1, 8(%rax)
+	addq	$8, %rsp
+	popq	%rbx
+	popq	%rbp
+	ret
+	.size	dothings, .-dothings
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 8
+.LC1:
+	.long	0
+	.long	1072693248
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits
